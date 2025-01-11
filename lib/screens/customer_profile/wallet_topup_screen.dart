@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:solitaire/constants/constant.dart';
+import 'package:solitaire/widgets/success_dialog.dart';
 
 class WalletTopupScreen extends StatefulWidget {
   const WalletTopupScreen({super.key});
@@ -20,6 +21,14 @@ class _WalletTopupScreenState extends State<WalletTopupScreen> {
   void dispose() {
     _amountController.dispose();
     super.dispose();
+  }
+
+  void _showSuccessDialog() {
+    SuccessDialog.show(
+      context,
+      title: 'Topup Successfully',
+      buttonText: 'Back to Profile',
+    );
   }
 
   @override
@@ -267,13 +276,13 @@ class _WalletTopupScreenState extends State<WalletTopupScreen> {
                               ),
                             ),
                             onPressed: () {
-                              // Handle confirm payment
+                              _showSuccessDialog();
                             },
                             child: const Text(
                               'Confirm payment',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 14,
+                                fontSize: 12,
                               ),
                             ),
                           ),
@@ -375,7 +384,7 @@ class _WalletTopupScreenState extends State<WalletTopupScreen> {
             label,
             style: TextStyle(
               color: Colors.grey[600],
-              fontSize: 14,
+              fontSize: 12,
               fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
             ),
           ),
@@ -383,7 +392,7 @@ class _WalletTopupScreenState extends State<WalletTopupScreen> {
             value,
             style: TextStyle(
               color: AppColors.purpleColor,
-              fontSize: 14,
+              fontSize: 12,
               fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
             ),
           ),
@@ -406,14 +415,14 @@ class _WalletTopupScreenState extends State<WalletTopupScreen> {
                 title,
                 style: const TextStyle(
                   color: AppColors.purpleColor,
-                  fontSize: 14,
+                  fontSize: 12,
                 ),
               ),
               Text(
                 date,
                 style: const TextStyle(
                   color: AppColors.purpleColor,
-                  fontSize: 12,
+                  fontSize: 10,
                 ),
               ),
             ],
@@ -425,7 +434,7 @@ class _WalletTopupScreenState extends State<WalletTopupScreen> {
                 amount,
                 style: const TextStyle(
                   color: AppColors.purpleColor,
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -433,7 +442,7 @@ class _WalletTopupScreenState extends State<WalletTopupScreen> {
                 subtitle,
                 style: const TextStyle(
                   color: AppColors.cyanBlueColor,
-                  fontSize: 12,
+                  fontSize: 10,
                 ),
               ),
             ],

@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:solitaire/constants/constant.dart';
 import 'package:solitaire/utils/app_navigator.dart';
 import 'login_screen.dart';
+import 'package:solitaire/widgets/success_dialog.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
@@ -41,40 +42,10 @@ class _StartScreenState extends State<StartScreen> {
   }
 
   void _showSuccessDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'Signing Up Successfully',
-              style: TextStyle(
-                color: AppColors.secondaryColor,
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Icon(
-              Icons.check_circle,
-              color: AppColors.secondaryColor,
-              size: 50,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.secondaryColor,
-                minimumSize: const Size(double.infinity, 45),
-              ),
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-      ),
+    SuccessDialog.show(
+      context,
+      title: 'Signing Up Successfully',
+      buttonText: 'OK',
     );
   }
 
@@ -133,6 +104,7 @@ class _StartScreenState extends State<StartScreen> {
                             child: TextField(
                               controller: _nameController,
                               focusNode: _nameFocus,
+                              textInputAction: TextInputAction.next,
                               onSubmitted: (_) {
                                 FocusScope.of(context)
                                     .requestFocus(_phoneFocus);
@@ -182,6 +154,8 @@ class _StartScreenState extends State<StartScreen> {
                             child: TextField(
                               controller: _phoneController,
                               focusNode: _phoneFocus,
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.phone,
                               onSubmitted: (_) {
                                 FocusScope.of(context)
                                     .requestFocus(_emailFocus);
@@ -231,8 +205,9 @@ class _StartScreenState extends State<StartScreen> {
                             child: TextField(
                               controller: _emailController,
                               focusNode: _emailFocus,
+                              textInputAction: TextInputAction.done,
+                              keyboardType: TextInputType.emailAddress,
                               onSubmitted: (_) {
-                                // Clear focus when done with last field
                                 FocusScope.of(context).unfocus();
                               },
                               decoration: InputDecoration(

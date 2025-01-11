@@ -4,6 +4,10 @@ class Constant {
   static const String appName = 'Solitaire';
 }
 
+class AppUrls {
+  static const String baseUrl = 'https://solapi.groute.online';
+}
+
 class AppColors {
   // orange color background: rgba(240, 138, 64, 1);
   static const Color primaryColor = Color(0xFFF08A40);

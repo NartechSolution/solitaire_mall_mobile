@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:solitaire/constants/constant.dart';
 import 'package:solitaire/screens/customer_profile/select_delivery_to_screen.dart';
+import 'package:solitaire/screens/pickers/available_pickers_screen.dart';
 import 'package:solitaire/utils/app_navigator.dart';
 import 'package:solitaire/widgets/service_card.dart';
 
@@ -46,7 +47,7 @@ class SelectServicesScreen extends StatelessWidget {
                   title: 'Request Picker',
                   imagePath: 'assets/request_picker.png',
                   onTap: () {
-                    // Handle Request Picker tap
+                    AppNavigator.push(context, const AvailablePickersScreen());
                   },
                 ),
                 const SizedBox(width: 20),

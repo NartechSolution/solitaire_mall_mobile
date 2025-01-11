@@ -29,7 +29,7 @@ class SelectDeliveryToScreen extends StatelessWidget {
                   const Text(
                     'Select Delivery To',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       color: AppColors.purpleColor,
                       fontWeight: FontWeight.w500,
                     ),

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:solitaire/utils/app_preferences.dart';
 import 'screens/auth/start_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await AppPreferences.init();
   runApp(const MyApp());
 }
 

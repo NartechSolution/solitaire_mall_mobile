@@ -249,7 +249,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                         const Text(
                           'Customer Profile',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 16,
                             color: AppColors.purpleColor,
                             fontWeight: FontWeight.w500,
                           ),
