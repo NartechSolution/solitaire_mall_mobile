@@ -16,6 +16,7 @@ enum HttpMethod {
   post,
   put,
   delete,
+  patch,
   multipart,
 }
 
@@ -221,6 +222,8 @@ class HttpService {
         return await http.put(uri, headers: headers, body: jsonBody);
       case HttpMethod.delete:
         return await http.delete(uri, headers: headers);
+      case HttpMethod.patch:
+        return await http.patch(uri, headers: headers, body: jsonBody);
       case HttpMethod.multipart:
         if (body is! Map<String, dynamic>) {
           throw ArgumentError(

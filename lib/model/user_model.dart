@@ -1,24 +1,26 @@
 class UserModel {
-  final String id;
-  final String name;
-  final String email;
-  final String phone;
-  final bool hasFingerprint;
-  final bool hasNfcCard;
+  final String? id;
+  final String? name;
+  final String? email;
+  final String? phone;
+  final bool? hasFingerprint;
+  final bool? hasNfcCard;
   final String? address;
   final String? avatar;
-  final String token;
+  final String? token;
+  final String? image;
 
   UserModel({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.phone,
-    required this.hasFingerprint,
-    required this.hasNfcCard,
+    this.id,
+    this.name,
+    this.email,
+    this.phone,
+    this.hasFingerprint,
+    this.hasNfcCard,
     this.address,
     this.avatar,
-    required this.token,
+    this.token,
+    this.image,
   });
 
   // Factory constructor to create UserModel from JSON
@@ -33,6 +35,7 @@ class UserModel {
       address: json['address'] as String?,
       avatar: json['avatar'] as String?,
       token: json['token'] as String,
+      image: json['image'],
     );
   }
 
@@ -48,6 +51,7 @@ class UserModel {
       'address': address,
       'avatar': avatar,
       'token': token,
+      'image': image,
     };
   }
 
@@ -62,6 +66,7 @@ class UserModel {
     String? address,
     String? avatar,
     String? token,
+    String? image,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -73,6 +78,7 @@ class UserModel {
       address: address ?? this.address,
       avatar: avatar ?? this.avatar,
       token: token ?? this.token,
+      image: image ?? this.image,
     );
   }
 }

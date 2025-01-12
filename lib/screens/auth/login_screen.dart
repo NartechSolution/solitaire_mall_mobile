@@ -42,6 +42,7 @@ class _LoginScreenState extends State<LoginScreen>
 
   bool _hasAttemptedFingerprint = false;
   bool _hasAttemptedNfc = false;
+  bool _obscurePassword = true;
 
   @override
   void initState() {
@@ -346,7 +347,7 @@ class _LoginScreenState extends State<LoginScreen>
                         child: TextField(
                           controller: _passwordController,
                           focusNode: _passwordFocusNode,
-                          obscureText: true,
+                          obscureText: _obscurePassword,
                           textInputAction: TextInputAction.done,
                           onSubmitted: (_) {
                             _passwordFocusNode.unfocus();
@@ -382,6 +383,19 @@ class _LoginScreenState extends State<LoginScreen>
                             prefixIcon: const Icon(
                               Icons.lock_outline,
                               color: Colors.grey,
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscurePassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscurePassword = !_obscurePassword;
+                                });
+                              },
                             ),
                           ),
                           style: const TextStyle(
@@ -428,7 +442,7 @@ class _LoginScreenState extends State<LoginScreen>
                                 ),
                         ),
                       ),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 50),
                       const Text(
                         'Or Login With',
                         style: TextStyle(
@@ -446,26 +460,37 @@ class _LoginScreenState extends State<LoginScreen>
                                   color: Colors.white,
                                   size: 80,
                                 )
-                              : GestureDetector(
-                                  onTap: () {
-                                    if (hasFingerprint == true) {
-                                      _authenticate();
-                                    } else {
-                                      _hasAttemptedFingerprint = true;
-                                      _showWarningMessage(
-                                          'Please enable fingerprint authentication in User Profile Settings');
-                                      _restartBlink();
-                                    }
-                                  },
-                                  child: FadeTransition(
-                                    opacity: (hasFingerprint == false &&
-                                            _hasAttemptedFingerprint)
-                                        ? _animationController
-                                        : const AlwaysStoppedAnimation(1.0),
-                                    child: SizedBox(
-                                      width: 80,
-                                      height: 80,
-                                      child: Image.asset('assets/finger.png'),
+                              : Container(
+                                  width: 80,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.transparent,
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (hasFingerprint == true) {
+                                        _authenticate();
+                                      } else {
+                                        _hasAttemptedFingerprint = true;
+                                        _showWarningMessage(
+                                            'Please enable fingerprint authentication in User Profile Settings');
+                                        _restartBlink();
+                                      }
+                                    },
+                                    child: FadeTransition(
+                                      opacity: (hasFingerprint == false &&
+                                              _hasAttemptedFingerprint)
+                                          ? _animationController
+                                          : const AlwaysStoppedAnimation(1.0),
+                                      child: SizedBox(
+                                        width: 80,
+                                        height: 80,
+                                        child: Image.asset(
+                                          'assets/finger.png',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -479,32 +504,43 @@ class _LoginScreenState extends State<LoginScreen>
                             ),
                           ),
                           const SizedBox(height: 30),
-                          GestureDetector(
-                            onTap: () {
-                              if (hasNfc == true) {
-                                showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (context) {
-                                    return const NFCScanDialog();
-                                  },
-                                );
-                              } else {
-                                _hasAttemptedNfc = true;
-                                _showWarningMessage(
-                                    'Please enable NFC in User Profile Settings');
-                                _restartBlink();
-                              }
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.only(left: 20),
-                              width: 80,
-                              height: 80,
-                              child: FadeTransition(
-                                opacity: (hasNfc == false && _hasAttemptedNfc)
-                                    ? _animationController
-                                    : const AlwaysStoppedAnimation(1.0),
-                                child: Image.asset('assets/nfc.png'),
+                          Container(
+                            width: 80,
+                            height: 90,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.transparent,
+                            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                if (hasNfc == true) {
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (context) {
+                                      return const NFCScanDialog();
+                                    },
+                                  );
+                                } else {
+                                  _hasAttemptedNfc = true;
+                                  _showWarningMessage(
+                                      'Please enable NFC in User Profile Settings');
+                                  _restartBlink();
+                                }
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(left: 20),
+                                width: 80,
+                                height: 90,
+                                child: FadeTransition(
+                                  opacity: (hasNfc == false && _hasAttemptedNfc)
+                                      ? _animationController
+                                      : const AlwaysStoppedAnimation(1.0),
+                                  child: Image.asset(
+                                    'assets/nfc.png',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
                             ),
                           ),

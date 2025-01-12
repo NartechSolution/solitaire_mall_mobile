@@ -20,15 +20,13 @@ class AuthController {
       },
     );
 
-    await AppPreferences.setUserData(
-      id: response['data']['id'],
-      name: response['data']['name'],
-      email: response['data']['email'],
-      phone: response['data']['phone'],
-      token: response['data']['token'],
-      hasNfc: response['data']['hasNfc'] ?? false,
-      hasFingerprint: response['data']['hasFingerprint'] ?? false,
-    );
+    AppPreferences.setHasFingerprint(response['data']['hasFingerprint']);
+    AppPreferences.setHasNfc(response['data']['hasNfc']);
+    AppPreferences.setToken(response['data']['token']);
+    AppPreferences.setUserId(response['data']['id']);
+    AppPreferences.setName(response['data']['name']);
+    AppPreferences.setEmail(response['data']['email']);
+    AppPreferences.setPhone(response['data']['phone']);
   }
 
   Future<void> loginUser(String email, String password) async {
@@ -46,15 +44,13 @@ class AuthController {
       },
     );
 
-    await AppPreferences.setUserData(
-      id: response['data']['id'],
-      name: response['data']['name'],
-      email: response['data']['email'],
-      phone: response['data']['phone'],
-      token: response['data']['token'],
-      hasNfc: response['data']['hasNfc'] ?? false,
-      hasFingerprint: response['data']['hasFingerprint'] ?? false,
-    );
+    AppPreferences.setHasFingerprint(response['data']['hasFingerprint']);
+    AppPreferences.setHasNfc(response['data']['hasNfc']);
+    AppPreferences.setToken(response['data']['token']);
+    AppPreferences.setUserId(response['data']['id']);
+    AppPreferences.setName(response['data']['name']);
+    AppPreferences.setEmail(response['data']['email']);
+    AppPreferences.setPhone(response['data']['phone']);
   }
 
   // login with fingerprint
@@ -70,14 +66,12 @@ class AuthController {
       },
     );
 
-    await AppPreferences.setUserData(
-      id: response['data']['id'],
-      name: response['data']['name'],
-      email: response['data']['email'],
-      phone: response['data']['phone'],
-      token: response['data']['token'],
-      hasNfc: response['data']['hasNfc'] ?? false,
-      hasFingerprint: response['data']['hasFingerprint'] ?? false,
-    );
+    AppPreferences.setHasFingerprint(response['data']['hasFingerprint']);
+    AppPreferences.setHasNfc(response['data']['hasNfc']);
+    AppPreferences.setToken(response['data']['token']);
+    AppPreferences.setUserId(response['data']['id']);
+    AppPreferences.setName(response['data']['name']);
+    AppPreferences.setEmail(response['data']['email']);
+    AppPreferences.setPhone(response['data']['phone']);
   }
 }
