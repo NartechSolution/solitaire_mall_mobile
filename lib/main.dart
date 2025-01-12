@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solitaire/cubit/auth/auth_cubit.dart';
 import 'package:solitaire/utils/app_preferences.dart';
 import 'screens/auth/start_screen.dart';
 
@@ -13,15 +15,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Solitaire',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.white,
-        useMaterial3: true,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => AuthCubit()),
+      ],
+      child: MaterialApp(
+        title: 'Solitaire',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          scaffoldBackgroundColor: Colors.white,
+          useMaterial3: true,
+        ),
+        debugShowCheckedModeBanner: false,
+        home: const StartScreen(),
       ),
-      debugShowCheckedModeBanner: false,
-      home: const StartScreen(),
     );
   }
 }

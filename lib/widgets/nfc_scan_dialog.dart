@@ -5,7 +5,12 @@ import 'package:nfc_manager/nfc_manager.dart';
 import 'package:solitaire/constants/constant.dart';
 
 class NFCScanDialog extends StatefulWidget {
-  const NFCScanDialog({super.key});
+  const NFCScanDialog({
+    super.key,
+    this.serialNumber,
+  });
+
+  final String? serialNumber;
 
   @override
   State<NFCScanDialog> createState() => _NFCScanDialogState();

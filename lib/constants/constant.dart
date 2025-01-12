@@ -20,4 +20,7 @@ class AppColors {
 
   // background: rgba(8, 176, 176, 1);
   static const Color cyanBlueColor = Color(0xFF08B0B0);
+
+  // error color background: rgba(255, 0, 0, 1);
+  static const Color errorColor = Color(0xFFFF0000);
 }

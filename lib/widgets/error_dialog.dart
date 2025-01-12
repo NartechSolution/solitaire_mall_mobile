@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:solitaire/constants/constant.dart';
 
-class SuccessDialog extends StatelessWidget {
+class ErrorDialog extends StatelessWidget {
   final String title;
   final String buttonText;
   final VoidCallback? onPressed;
 
-  const SuccessDialog({
+  const ErrorDialog({
     super.key,
     required this.title,
     required this.buttonText,
@@ -21,7 +21,7 @@ class SuccessDialog extends StatelessWidget {
   }) {
     return showDialog(
       context: context,
-      builder: (context) => SuccessDialog(
+      builder: (context) => ErrorDialog(
         title: title,
         buttonText: buttonText,
         onPressed: onPressed ?? () => Navigator.pop(context),
@@ -38,7 +38,7 @@ class SuccessDialog extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-              color: AppColors.secondaryColor,
+              color: AppColors.errorColor,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
@@ -46,15 +46,15 @@ class SuccessDialog extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           const Icon(
-            Icons.check_circle,
-            color: AppColors.secondaryColor,
+            Icons.error_outline,
+            color: AppColors.errorColor,
             size: 50,
           ),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: onPressed ?? () => Navigator.pop(context),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.secondaryColor,
+              backgroundColor: AppColors.errorColor,
               minimumSize: const Size(double.infinity, 45),
             ),
             child: Text(
