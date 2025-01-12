@@ -21,7 +21,7 @@ class AuthController {
     );
 
     AppPreferences.setHasFingerprint(response['data']['hasFingerprint']);
-    AppPreferences.setHasNfc(response['data']['hasNfc']);
+    AppPreferences.setHasNfc(response['data']['hasNfcCard']);
     AppPreferences.setToken(response['data']['token']);
     AppPreferences.setUserId(response['data']['id']);
     AppPreferences.setName(response['data']['name']);
@@ -45,7 +45,7 @@ class AuthController {
     );
 
     AppPreferences.setHasFingerprint(response['data']['hasFingerprint']);
-    AppPreferences.setHasNfc(response['data']['hasNfc']);
+    AppPreferences.setHasNfc(response['data']['hasNfcCard']);
     AppPreferences.setToken(response['data']['token']);
     AppPreferences.setUserId(response['data']['id']);
     AppPreferences.setName(response['data']['name']);
@@ -67,7 +67,25 @@ class AuthController {
     );
 
     AppPreferences.setHasFingerprint(response['data']['hasFingerprint']);
-    AppPreferences.setHasNfc(response['data']['hasNfc']);
+    AppPreferences.setHasNfc(response['data']['hasNfcCard']);
+    AppPreferences.setToken(response['data']['token']);
+    AppPreferences.setUserId(response['data']['id']);
+    AppPreferences.setName(response['data']['name']);
+    AppPreferences.setEmail(response['data']['email']);
+    AppPreferences.setPhone(response['data']['phone']);
+  }
+
+  Future<void> loginWithNfc(String nfcCardId) async {
+    const url = "/api/v1/customers/nfc/login";
+
+    final response = await _httpService.request(
+      url,
+      method: HttpMethod.post,
+      data: {'nfcCardId': nfcCardId},
+    );
+
+    AppPreferences.setHasFingerprint(response['data']['hasFingerprint']);
+    AppPreferences.setHasNfc(response['data']['hasNfcCard']);
     AppPreferences.setToken(response['data']['token']);
     AppPreferences.setUserId(response['data']['id']);
     AppPreferences.setName(response['data']['name']);

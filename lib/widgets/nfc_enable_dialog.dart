@@ -3,23 +3,25 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:solitaire/constants/constant.dart';
-import 'package:solitaire/cubit/auth/auth_cubit.dart';
+import 'package:solitaire/cubit/customer_profile/profile_cubit.dart';
 
-class NFCScanDialog extends StatefulWidget {
-  const NFCScanDialog({
+class NFCEnableDialog extends StatefulWidget {
+  const NFCEnableDialog({
     super.key,
     this.serialNumber,
-    required this.authCubit,
+    required this.nfcValue,
+    required this.profileCubit,
   });
 
   final String? serialNumber;
-  final AuthCubit authCubit;
+  final bool nfcValue;
+  final ProfileCubit profileCubit;
 
   @override
-  State<NFCScanDialog> createState() => _NFCScanDialogState();
+  State<NFCEnableDialog> createState() => _NFCEnableDialogState();
 }
 
-class _NFCScanDialogState extends State<NFCScanDialog> {
+class _NFCEnableDialogState extends State<NFCEnableDialog> {
   bool _isScanning = false;
 
   @override
@@ -79,7 +81,8 @@ class _NFCScanDialogState extends State<NFCScanDialog> {
 
             if (mounted) {
               Navigator.pop(context);
-              widget.authCubit.loginWithNfc(serialNumber ?? '');
+              print('serialNumber: $serialNumber');
+              widget.profileCubit.enableNfc(true, serialNumber!);
             }
           } catch (e) {
             if (mounted) {

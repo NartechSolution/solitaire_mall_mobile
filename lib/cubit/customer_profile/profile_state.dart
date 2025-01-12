@@ -35,3 +35,13 @@ class FingerprintEnableDisableError extends ProfileState {
 
   FingerprintEnableDisableError(this.message);
 }
+
+class NfcEnableDisableLoading extends ProfileState {}
+
+class NfcEnableDisableSuccess extends ProfileState {}
+
+class NfcEnableDisableError extends ProfileState {
+  final String message;
+
+  NfcEnableDisableError(this.message);
+}

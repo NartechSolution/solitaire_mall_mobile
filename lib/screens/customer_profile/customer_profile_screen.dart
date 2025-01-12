@@ -13,6 +13,7 @@ import 'package:solitaire/utils/app_preferences.dart';
 import 'dart:io';
 
 import 'package:solitaire/widgets/success_dialog.dart';
+import 'package:solitaire/widgets/nfc_enable_dialog.dart';
 
 class ProfileData {
   String name;
@@ -55,6 +56,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
 
   bool? hasNfc;
   bool? hasFingerprint;
+  bool? isDisabled;
 
   @override
   void initState() {
@@ -325,11 +327,28 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
             }
             if (state is FingerprintEnableDisableSuccess) {
               if (mounted) {
-                hasFingerprint == false
+                hasFingerprint == false && isDisabled == false
                     ? _showSuccessDialog('Fingerprint enabled successfully')
                     : _showSuccessDialog('Fingerprint disabled successfully');
               }
               profileCubit.getCustomerProfile();
+            }
+            if (state is NfcEnableDisableSuccess) {
+              if (mounted) {
+                hasNfc == false
+                    ? _showSuccessDialog('NFC enabled successfully')
+                    : _showSuccessDialog('NFC disabled successfully');
+              }
+              profileCubit.getCustomerProfile();
+            }
+            if (state is NfcEnableDisableError) {
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message.replaceAll('Exception:', '')),
+                  ),
+                );
+              }
             }
             if (state is FingerprintEnableDisableError) {
               if (mounted) {
@@ -713,7 +732,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                               _switchStates['NFC']!
                                   ? AppColors.secondaryColor
                                   : Colors.grey,
-                              hasFingerprint ?? false,
+                              hasNfc ?? false,
                             ),
                             const SizedBox(height: 12),
                             _buildStatusButton(
@@ -721,7 +740,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                               _switchStates['Fingerprint']!
                                   ? AppColors.secondaryColor
                                   : Colors.grey,
-                              true,
+                              hasFingerprint ?? false,
                             ),
                           ],
                         ),
@@ -804,16 +823,43 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Enable NFC'),
-            content: const Text('Do you want to enable NFC authentication?'),
+            backgroundColor: Colors.white,
+            title: const Text(
+              'Enable NFC',
+              style: TextStyle(
+                color: AppColors.purpleColor,
+                fontSize: 12,
+              ),
+            ),
+            content: const Text(
+              'Do you want to enable NFC authentication?',
+              style: TextStyle(
+                color: Colors.black87,
+                fontSize: 10,
+              ),
+            ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancel'),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: AppColors.purpleColor,
+                    fontSize: 10,
+                  ),
+                ),
               ),
               TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text('Enable'),
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+                child: const Text(
+                  'Enable',
+                  style: TextStyle(
+                    color: AppColors.purpleColor,
+                    fontSize: 10,
+                  ),
+                ),
               ),
             ],
           );
@@ -826,9 +872,18 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
         });
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('NFC authentication enabled')),
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return NFCEnableDialog(
+                nfcValue: hasNfc ?? false,
+                profileCubit: profileCubit,
+              );
+            },
           );
+          await AppPreferences.setHasNfc(true);
+          isDisabled = false;
         }
       }
     } else {
@@ -836,9 +891,9 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
         _switchStates['NFC'] = false;
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('NFC authentication disabled')),
-        );
+        profileCubit.enableNfc(false, '');
+        await AppPreferences.setHasNfc(false);
+        isDisabled = true;
       }
     }
   }
@@ -850,19 +905,43 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Enable Fingerprint'),
-            content:
-                const Text('Do you want to enable fingerprint authentication?'),
+            backgroundColor: Colors.white,
+            title: const Text(
+              'Enable Fingerprint',
+              style: TextStyle(
+                color: AppColors.purpleColor,
+                fontSize: 12,
+              ),
+            ),
+            content: const Text(
+              'Do you want to enable fingerprint authentication?',
+              style: TextStyle(
+                color: Colors.black87,
+                fontSize: 10,
+              ),
+            ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.pop(context, false);
                 },
-                child: const Text('Cancel'),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: AppColors.purpleColor,
+                    fontSize: 10,
+                  ),
+                ),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context, true),
-                child: const Text('Enable'),
+                child: const Text(
+                  'Enable',
+                  style: TextStyle(
+                    color: AppColors.purpleColor,
+                    fontSize: 10,
+                  ),
+                ),
               ),
             ],
           );

@@ -31,3 +31,13 @@ class LoginWithFingerprintError extends AuthState {
 
   LoginWithFingerprintError(this.message);
 }
+
+class LoginWithNfcLoading extends AuthState {}
+
+class LoginWithNfcSuccess extends AuthState {}
+
+class LoginWithNfcError extends AuthState {
+  final String message;
+
+  LoginWithNfcError(this.message);
+}

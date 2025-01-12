@@ -17,7 +17,7 @@ class CustomerProfileController {
     final response = await _httpService.request(url, method: HttpMethod.get);
 
     AppPreferences.setHasFingerprint(response['data']['hasFingerprint']);
-    AppPreferences.setHasNfc(response['data']['hasNfc']);
+    AppPreferences.setHasNfc(response['data']['hasNfcCard']);
     AppPreferences.setToken(response['data']['token']);
     AppPreferences.setUserId(response['data']['id']);
     AppPreferences.setName(response['data']['name']);
@@ -88,9 +88,24 @@ class CustomerProfileController {
         "enable": value,
       },
     );
-
-    print(response);
-
     AppPreferences.setHasFingerprint(response['data']['hasFingerprint']);
+  }
+
+  Future<void> enableNfc(bool value, String nfcCardId) async {
+    final token = AppPreferences.getToken();
+    const url = "/api/v1/customers/nfc";
+
+    final response = await _httpService.request(
+      url,
+      method: HttpMethod.patch,
+      additionalHeaders: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      },
+      data: value == true
+          ? {"enable": value, "nfcCardId": nfcCardId}
+          : {"enable": value},
+    );
+    AppPreferences.setHasNfc(response['data']['hasNfcCard']);
   }
 }

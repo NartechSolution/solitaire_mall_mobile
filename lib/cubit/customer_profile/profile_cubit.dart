@@ -63,11 +63,33 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> enableFingerprint(bool value) async {
     emit(FingerprintEnableDisableLoading());
     try {
-      await _customerProfileController.enableFingerprint(value);
-      await getCustomerProfile();
-      emit(FingerprintEnableDisableSuccess());
+      final isConnected = await NetworkConnectivity.instance.checkInternet();
+
+      if (isConnected) {
+        await _customerProfileController.enableFingerprint(value);
+        await getCustomerProfile();
+        emit(FingerprintEnableDisableSuccess());
+      } else {
+        emit(FingerprintEnableDisableError('No internet connection'));
+      }
     } catch (e) {
       emit(FingerprintEnableDisableError(e.toString()));
+    }
+  }
+
+  Future<void> enableNfc(bool value, String nfcCardId) async {
+    emit(NfcEnableDisableLoading());
+    try {
+      final isConnected = await NetworkConnectivity.instance.checkInternet();
+
+      if (isConnected) {
+        await _customerProfileController.enableNfc(value, nfcCardId);
+        emit(NfcEnableDisableSuccess());
+      } else {
+        emit(NfcEnableDisableError('No internet connection'));
+      }
+    } catch (e) {
+      emit(NfcEnableDisableError(e.toString()));
     }
   }
 }

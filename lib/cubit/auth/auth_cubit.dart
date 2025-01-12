@@ -60,4 +60,18 @@ class AuthCubit extends Cubit<AuthState> {
       emit(LoginWithFingerprintError(e.toString()));
     }
   }
+
+  Future<void> loginWithNfc(String nfcCardId) async {
+    emit(LoginWithNfcLoading());
+    try {
+      final isConnected = await NetworkConnectivity.instance.checkInternet();
+
+      if (isConnected) {
+        await _authController.loginWithNfc(nfcCardId);
+        emit(LoginWithNfcSuccess());
+      }
+    } catch (e) {
+      emit(LoginWithNfcError(e.toString()));
+    }
+  }
 }

@@ -248,12 +248,18 @@ class _LoginScreenState extends State<LoginScreen>
           } else if (state is LoginError) {
             _showWarningMessage(state.message);
           } else if (state is LoginWithFingerprintError) {
-            _showWarningMessage(state.message);
+            _showWarningMessage(state.message.replaceAll('Exception: ', ''));
           } else if (state is LoginWithFingerprintSuccess) {
             Navigator.pop(context); // Close dialog
             AppNavigator.pushReplacement(
                 context, const CustomerProfileScreen());
             _showSuccessDialog('Login Successfully');
+          } else if (state is LoginWithNfcSuccess) {
+            AppNavigator.pushReplacement(
+                context, const CustomerProfileScreen());
+            _showSuccessDialog('Login Successfully');
+          } else if (state is LoginWithNfcError) {
+            _showWarningMessage(state.message.replaceAll('Exception: ', ''));
           }
         },
         builder: (context, state) {
@@ -504,46 +510,56 @@ class _LoginScreenState extends State<LoginScreen>
                             ),
                           ),
                           const SizedBox(height: 30),
-                          Container(
-                            width: 80,
-                            height: 90,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.transparent,
-                            ),
-                            child: GestureDetector(
-                              onTap: () {
-                                if (hasNfc == true) {
-                                  showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (context) {
-                                      return const NFCScanDialog();
+                          state is LoginWithNfcLoading
+                              ? const AppLoading(
+                                  color: Colors.white,
+                                  size: 80,
+                                )
+                              : Container(
+                                  width: 80,
+                                  height: 90,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.transparent,
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (hasNfc == true) {
+                                        showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (context) {
+                                            return NFCScanDialog(
+                                              authCubit:
+                                                  BlocProvider.of<AuthCubit>(
+                                                      context),
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        _hasAttemptedNfc = true;
+                                        _showWarningMessage(
+                                            'Please enable NFC in User Profile Settings');
+                                        _restartBlink();
+                                      }
                                     },
-                                  );
-                                } else {
-                                  _hasAttemptedNfc = true;
-                                  _showWarningMessage(
-                                      'Please enable NFC in User Profile Settings');
-                                  _restartBlink();
-                                }
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.only(left: 20),
-                                width: 80,
-                                height: 90,
-                                child: FadeTransition(
-                                  opacity: (hasNfc == false && _hasAttemptedNfc)
-                                      ? _animationController
-                                      : const AlwaysStoppedAnimation(1.0),
-                                  child: Image.asset(
-                                    'assets/nfc.png',
-                                    fit: BoxFit.cover,
+                                    child: Container(
+                                      margin: const EdgeInsets.only(left: 20),
+                                      width: 80,
+                                      height: 90,
+                                      child: FadeTransition(
+                                        opacity: (hasNfc == false &&
+                                                _hasAttemptedNfc)
+                                            ? _animationController
+                                            : const AlwaysStoppedAnimation(1.0),
+                                        child: Image.asset(
+                                          'assets/nfc.png',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                       const SizedBox(height: 30),
