@@ -63,9 +63,6 @@ class AppPreferences {
     await _preferences.remove(_keyName);
     await _preferences.remove(_keyEmail);
     await _preferences.remove(_keyPhone);
-    await _preferences.remove(_keyToken);
-    await _preferences.remove(_keyHasNfc);
-    await _preferences.remove(_keyHasFingerprint);
     return true;
   }
 
@@ -87,5 +84,9 @@ class AppPreferences {
   // Set Fingerprint registration status
   static Future<void> setFingerprintRegistered(bool value) async {
     await _preferences.setBool(_keyFingerprintRegistered, value);
+  }
+
+  static Future<void> logout() async {
+    await clearUserData();
   }
 }

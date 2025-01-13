@@ -19,6 +19,9 @@ class ProfileCubit extends Cubit<ProfileState> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController addressController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController oldPasswordController = TextEditingController();
 
   String imageUrl = '';
 

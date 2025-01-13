@@ -4,6 +4,7 @@ import 'package:solitaire/constants/constant.dart';
 import 'package:solitaire/cubit/customer_profile/profile_cubit.dart';
 import 'package:solitaire/cubit/customer_profile/profile_state.dart';
 import 'package:solitaire/model/user_model.dart';
+import 'package:solitaire/screens/auth/start_screen.dart';
 import 'package:solitaire/screens/customer_profile/select_services_screen.dart';
 import 'package:solitaire/screens/customer_profile/wallet_topup_screen.dart';
 import 'package:solitaire/utils/app_loading.dart';
@@ -145,6 +146,161 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
               ),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showResetPasswordDialog() async {
+    bool obscurePassword = true;
+    bool obscureConfirmPassword = true;
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              title: const Text(
+                'Reset Password',
+                style: TextStyle(
+                  color: AppColors.purpleColor,
+                  fontSize: 12,
+                ),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: TextField(
+                      controller: profileCubit.passwordController,
+                      obscureText: obscurePassword,
+                      decoration: InputDecoration(
+                        hintText: 'Enter new password',
+                        hintStyle: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            obscurePassword
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.grey,
+                            size: 20,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              obscurePassword = !obscurePassword;
+                            });
+                          },
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    width: double.infinity,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: TextField(
+                      controller: profileCubit.confirmPasswordController,
+                      obscureText: obscureConfirmPassword,
+                      decoration: InputDecoration(
+                        hintText: 'Confirm new password',
+                        hintStyle: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            obscureConfirmPassword
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.grey,
+                            size: 20,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              obscureConfirmPassword = !obscureConfirmPassword;
+                            });
+                          },
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: AppColors.purpleColor,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    if (profileCubit.passwordController.text.isEmpty ||
+                        profileCubit.confirmPasswordController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Please fill in both fields')),
+                      );
+                      return;
+                    }
+
+                    if (profileCubit.passwordController.text !=
+                        profileCubit.confirmPasswordController.text) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Passwords do not match')),
+                      );
+                      return;
+                    }
+
+                    setState(() {
+                      profileCubit.oldPasswordController.text =
+                          profileCubit.passwordController.text;
+                    });
+                    profileCubit.updateCustomerProfile(
+                      UserModel(
+                        password: profileCubit.passwordController.text,
+                      ),
+                    );
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Save',
+                    style: TextStyle(
+                      color: AppColors.purpleColor,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -479,15 +635,17 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                                   bottom: 0,
                                   right: 0,
                                   child: Container(
+                                    width: 30,
+                                    height: 30,
                                     decoration: BoxDecoration(
                                       color: AppColors.purpleColor,
-                                      borderRadius: BorderRadius.circular(15),
+                                      borderRadius: BorderRadius.circular(5),
                                     ),
                                     child: IconButton(
                                       icon: const Icon(
                                         Icons.edit,
                                         color: Colors.white,
-                                        size: 16,
+                                        size: 15,
                                       ),
                                       onPressed: _pickImage,
                                       constraints: const BoxConstraints(
@@ -631,6 +789,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                                 profileCubit.emailController.text = value),
                           ),
                         ),
+
                         _buildProfileItem(
                           profileCubit.addressController.text,
                           Icons.edit,
@@ -644,6 +803,32 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
 
                         // Update Profile Button
                         const SizedBox(height: 20),
+
+                        // reset password button
+                        SizedBox(
+                          height: 40,
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _showResetPasswordDialog();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Text(
+                              'Reset Password',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 5),
 
                         SizedBox(
                           height: 40,
@@ -682,8 +867,9 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                           ),
                         ),
 
+                        const SizedBox(height: 5),
+
                         // Request Services Button
-                        const SizedBox(height: 12),
                         SizedBox(
                           height: 40,
                           width: double.infinity,
@@ -702,6 +888,80 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                             ),
                             child: const Text(
                               'Request Services',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 5),
+                        // logout button
+                        SizedBox(
+                          height: 40,
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    backgroundColor: Colors.white,
+                                    title: const Text(
+                                      'Confirm Logout',
+                                      style: TextStyle(
+                                        color: AppColors.purpleColor,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    content: const Text(
+                                      'Are you sure you want to logout?',
+                                      style: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text(
+                                          'Cancel',
+                                          style: TextStyle(
+                                            color: AppColors.purpleColor,
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          AppPreferences.logout();
+                                          AppNavigator.pushAndRemoveUntil(
+                                            context,
+                                            const StartScreen(),
+                                          );
+                                        },
+                                        child: const Text(
+                                          'Logout',
+                                          style: TextStyle(
+                                            color: AppColors.errorColor,
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.errorColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Text(
+                              'Logout',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,

@@ -6,7 +6,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:solitaire/constants/constant.dart';
 import 'package:solitaire/cubit/auth/auth_cubit.dart';
 import 'package:solitaire/cubit/auth/auth_state.dart';
-import 'package:solitaire/screens/customer_profile/customer_profile_screen.dart';
 import 'package:solitaire/utils/app_loading.dart';
 import 'package:solitaire/utils/app_navigator.dart';
 import 'package:solitaire/widgets/error_dialog.dart';
@@ -63,8 +62,7 @@ class _StartScreenState extends State<StartScreen> {
         listener: (context, state) {
           print(state);
           if (state is RegisterSuccess) {
-            AppNavigator.pushReplacement(
-                context, const CustomerProfileScreen());
+            AppNavigator.push(context, const LoginScreen());
             _showSuccessDialog();
           }
           if (state is RegisterError) {

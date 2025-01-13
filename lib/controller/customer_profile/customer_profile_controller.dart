@@ -40,6 +40,7 @@ class CustomerProfileController {
     request.fields['email'] = user.email ?? '';
     request.fields['phone'] = user.phone ?? '';
     request.fields['address'] = user.address ?? '';
+    request.fields['password'] = user.password ?? '';
 
     // Add image file if provided
     if (imageFile != null) {

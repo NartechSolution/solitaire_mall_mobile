@@ -9,6 +9,7 @@ class UserModel {
   final String? avatar;
   final String? token;
   final String? image;
+  final String? password;
 
   UserModel({
     this.id,
@@ -21,6 +22,7 @@ class UserModel {
     this.avatar,
     this.token,
     this.image,
+    this.password,
   });
 
   // Factory constructor to create UserModel from JSON
@@ -36,6 +38,7 @@ class UserModel {
       avatar: json['avatar'] as String?,
       token: json['token'] as String,
       image: json['image'],
+      password: json['password'] as String?,
     );
   }
 
