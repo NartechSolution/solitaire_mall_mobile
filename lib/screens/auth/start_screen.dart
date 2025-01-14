@@ -153,7 +153,7 @@ class _StartScreenState extends State<StartScreen> {
                                     ),
                                     contentPadding: const EdgeInsets.symmetric(
                                       horizontal: 20,
-                                      vertical: 15,
+                                      vertical: 10,
                                     ),
                                     isDense: true,
                                     constraints: const BoxConstraints(
@@ -201,6 +201,7 @@ class _StartScreenState extends State<StartScreen> {
                                     ),
                                     contentPadding: const EdgeInsets.symmetric(
                                       horizontal: 20,
+                                      vertical: 10,
                                     ),
                                   ),
                                   initialCountryCode: 'SA',
@@ -247,7 +248,7 @@ class _StartScreenState extends State<StartScreen> {
                                     ),
                                     contentPadding: const EdgeInsets.symmetric(
                                       horizontal: 20,
-                                      vertical: 15,
+                                      vertical: 10,
                                     ),
                                     isDense: true,
                                     constraints: const BoxConstraints(
