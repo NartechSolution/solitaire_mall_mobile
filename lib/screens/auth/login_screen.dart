@@ -153,17 +153,21 @@ class _LoginScreenState extends State<LoginScreen>
                                 final String? email = AppPreferences.getEmail();
                                 if (email != null) {
                                   Navigator.pop(context);
-                                  context
+                                  await context
                                       .read<AuthCubit>()
                                       .loginWithFingerprint(email);
+                                } else {
+                                  Navigator.pop(context);
+                                  _showWarningMessage(
+                                      'No saved email found. Please login with credentials first');
                                 }
                               }
                             } on PlatformException catch (e) {
-                              print(e);
+                              print('Authentication error: $e');
                               if (mounted) {
                                 Navigator.pop(context);
                                 _showWarningMessage(
-                                    'Please enable fingerprint authentication in User Profile Settings');
+                                    'Authentication failed. Please try again.');
                                 _restartBlink();
                               }
                             }
@@ -204,7 +208,8 @@ class _LoginScreenState extends State<LoginScreen>
         );
       }
     } on PlatformException catch (e) {
-      print(e);
+      print('Platform Exception: $e');
+      _showWarningMessage('Authentication failed. Please try again.');
     }
   }
 

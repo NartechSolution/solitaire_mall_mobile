@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:solitaire/constants/constant.dart';
+import 'package:solitaire/cubit/customer_profile/profile_cubit.dart';
 import 'package:solitaire/widgets/success_dialog.dart';
 
 class WalletTopupScreen extends StatefulWidget {
-  const WalletTopupScreen({super.key});
+  const WalletTopupScreen({
+    super.key,
+  });
 
   @override
   State<WalletTopupScreen> createState() => _WalletTopupScreenState();
@@ -14,7 +18,6 @@ class _WalletTopupScreenState extends State<WalletTopupScreen> {
   final TextEditingController _amountController = TextEditingController();
   final List<double> quickTopupAmounts = [50, 100, 200, 500, 1000];
   String selectedPaymentMethod = '';
-  double currentBalance = 100.00;
   String? selectedAmount;
 
   @override
@@ -104,7 +107,10 @@ class _WalletTopupScreenState extends State<WalletTopupScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              currentBalance.toStringAsFixed(2),
+                              context
+                                  .read<ProfileCubit>()
+                                  .currentBalance
+                                  .toString(),
                               style: const TextStyle(
                                 color: AppColors.purpleColor,
                                 fontSize: 24,

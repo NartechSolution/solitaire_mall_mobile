@@ -10,6 +10,7 @@ class UserModel {
   final String? token;
   final String? image;
   final String? password;
+  final num? currentBalance;
 
   UserModel({
     this.id,
@@ -23,6 +24,7 @@ class UserModel {
     this.token,
     this.image,
     this.password,
+    this.currentBalance,
   });
 
   // Factory constructor to create UserModel from JSON
@@ -39,6 +41,7 @@ class UserModel {
       token: json['token'] as String,
       image: json['image'],
       password: json['password'] as String?,
+      currentBalance: json['currentBalance'] as num?,
     );
   }
 
@@ -55,6 +58,7 @@ class UserModel {
       'avatar': avatar,
       'token': token,
       'image': image,
+      'currentBalance': currentBalance,
     };
   }
 
@@ -70,6 +74,7 @@ class UserModel {
     String? avatar,
     String? token,
     String? image,
+    num? currentBalance,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -82,6 +87,7 @@ class UserModel {
       avatar: avatar ?? this.avatar,
       token: token ?? this.token,
       image: image ?? this.image,
+      currentBalance: currentBalance ?? this.currentBalance,
     );
   }
 }

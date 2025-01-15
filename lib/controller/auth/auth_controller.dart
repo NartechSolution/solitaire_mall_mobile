@@ -27,6 +27,7 @@ class AuthController {
     AppPreferences.setName(response['data']['name']);
     AppPreferences.setEmail(response['data']['email']);
     AppPreferences.setPhone(response['data']['phone']);
+    AppPreferences.setCurrentBalance(response['data']['currentBalance']);
   }
 
   Future<void> loginUser(String email, String password) async {
@@ -51,6 +52,7 @@ class AuthController {
     AppPreferences.setName(response['data']['name']);
     AppPreferences.setEmail(response['data']['email']);
     AppPreferences.setPhone(response['data']['phone']);
+    AppPreferences.setCurrentBalance(response['data']['currentBalance']);
   }
 
   // login with fingerprint
@@ -73,6 +75,7 @@ class AuthController {
     AppPreferences.setName(response['data']['name']);
     AppPreferences.setEmail(response['data']['email']);
     AppPreferences.setPhone(response['data']['phone']);
+    AppPreferences.setCurrentBalance(response['data']['currentBalance']);
   }
 
   Future<void> loginWithNfc(String nfcCardId) async {
@@ -91,5 +94,6 @@ class AuthController {
     AppPreferences.setName(response['data']['name']);
     AppPreferences.setEmail(response['data']['email']);
     AppPreferences.setPhone(response['data']['phone']);
+    AppPreferences.setCurrentBalance(response['data']['currentBalance']);
   }
 }

@@ -52,7 +52,6 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
     'Fingerprint': false,
   };
 
-  ProfileCubit profileCubit = ProfileCubit();
   AppPreferences appPreferences = AppPreferences();
 
   bool? hasNfc;
@@ -62,7 +61,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
   @override
   void initState() {
     super.initState();
-    profileCubit.getCustomerProfile();
+    context.read<ProfileCubit>().getCustomerProfile();
 
     hasNfc = AppPreferences.getHasNfc();
     hasFingerprint = AppPreferences.getHasFingerprint();
@@ -180,7 +179,8 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: TextField(
-                      controller: profileCubit.passwordController,
+                      controller:
+                          context.read<ProfileCubit>().passwordController,
                       obscureText: obscurePassword,
                       decoration: InputDecoration(
                         hintText: 'Enter new password',
@@ -217,7 +217,9 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: TextField(
-                      controller: profileCubit.confirmPasswordController,
+                      controller: context
+                          .read<ProfileCubit>()
+                          .confirmPasswordController,
                       obscureText: obscureConfirmPassword,
                       decoration: InputDecoration(
                         hintText: 'Confirm new password',
@@ -262,8 +264,16 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                 ),
                 TextButton(
                   onPressed: () {
-                    if (profileCubit.passwordController.text.isEmpty ||
-                        profileCubit.confirmPasswordController.text.isEmpty) {
+                    if (context
+                            .read<ProfileCubit>()
+                            .passwordController
+                            .text
+                            .isEmpty ||
+                        context
+                            .read<ProfileCubit>()
+                            .confirmPasswordController
+                            .text
+                            .isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                             content: Text('Please fill in both fields')),
@@ -271,8 +281,11 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                       return;
                     }
 
-                    if (profileCubit.passwordController.text !=
-                        profileCubit.confirmPasswordController.text) {
+                    if (context.read<ProfileCubit>().passwordController.text !=
+                        context
+                            .read<ProfileCubit>()
+                            .confirmPasswordController
+                            .text) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Passwords do not match')),
                       );
@@ -280,14 +293,17 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                     }
 
                     setState(() {
-                      profileCubit.oldPasswordController.text =
-                          profileCubit.passwordController.text;
+                      context.read<ProfileCubit>().oldPasswordController.text =
+                          context.read<ProfileCubit>().passwordController.text;
                     });
-                    profileCubit.updateCustomerProfile(
-                      UserModel(
-                        password: profileCubit.passwordController.text,
-                      ),
-                    );
+                    context.read<ProfileCubit>().updateCustomerProfile(
+                          UserModel(
+                            password: context
+                                .read<ProfileCubit>()
+                                .passwordController
+                                .text,
+                          ),
+                        );
                     Navigator.pop(context);
                   },
                   child: const Text(
@@ -445,29 +461,38 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
     );
   }
 
+  String _formatCurrency(double amount) {
+    if (amount >= 1000000) {
+      return '${(amount / 1000000).toStringAsFixed(1)}M';
+    } else if (amount >= 1000) {
+      return '${(amount / 1000).toStringAsFixed(1)}K';
+    } else {
+      return amount.toStringAsFixed(2);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: BlocConsumer<ProfileCubit, ProfileState>(
-          bloc: profileCubit,
           listener: (context, state) {
             if (state is ProfileSuccess) {
               setState(() {
                 _profileData = ProfileData(
-                  name: profileCubit.nameController.text,
-                  phone: profileCubit.phoneController.text,
-                  email: profileCubit.emailController.text,
-                  address: profileCubit.addressController.text,
-                  image: profileCubit.imageUrl,
+                  name: context.read<ProfileCubit>().nameController.text,
+                  phone: context.read<ProfileCubit>().phoneController.text,
+                  email: context.read<ProfileCubit>().emailController.text,
+                  address: context.read<ProfileCubit>().addressController.text,
+                  image: context.read<ProfileCubit>().imageUrl,
                 );
               });
             }
             if (state is ProfileUpdateSuccess) {
               if (mounted) {
                 _showSuccessDialog('Profile updated successfully');
-                profileCubit.getCustomerProfile();
+                context.read<ProfileCubit>().getCustomerProfile();
               }
             }
             if (state is ProfileUpdateError) {
@@ -487,7 +512,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                     ? _showSuccessDialog('Fingerprint enabled successfully')
                     : _showSuccessDialog('Fingerprint disabled successfully');
               }
-              profileCubit.getCustomerProfile();
+              context.read<ProfileCubit>().getCustomerProfile();
             }
             if (state is NfcEnableDisableSuccess) {
               if (mounted) {
@@ -495,7 +520,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                     ? _showSuccessDialog('NFC enabled successfully')
                     : _showSuccessDialog('NFC disabled successfully');
               }
-              profileCubit.getCustomerProfile();
+              context.read<ProfileCubit>().getCustomerProfile();
             }
             if (state is NfcEnableDisableError) {
               if (mounted) {
@@ -514,7 +539,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                           Text(state.message.replaceAll('Exception:', ''))),
                 );
                 hasFingerprint = false;
-                profileCubit.getCustomerProfile();
+                context.read<ProfileCubit>().getCustomerProfile();
               }
             }
           },
@@ -699,9 +724,12 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                                       Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
-                                        children: const [
+                                        children: [
                                           Text(
-                                            '100.00 ',
+                                            context
+                                                .read<ProfileCubit>()
+                                                .currentBalance
+                                                .toString(),
                                             style: TextStyle(
                                               color: AppColors.purpleColor,
                                               fontSize: 14,
@@ -709,7 +737,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                                             ),
                                           ),
                                           Text(
-                                            'SAR',
+                                            ' SAR',
                                             style: TextStyle(
                                               color: AppColors.purpleColor,
                                               fontSize: 10,
@@ -764,9 +792,11 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                           Icons.edit,
                           onEdit: () => _showEditDialog(
                             'Name',
-                            profileCubit.nameController.text,
-                            (value) => setState(
-                                () => profileCubit.nameController.text = value),
+                            context.read<ProfileCubit>().nameController.text,
+                            (value) => setState(() => context
+                                .read<ProfileCubit>()
+                                .nameController
+                                .text = value),
                           ),
                         ),
                         _buildProfileItem(
@@ -774,9 +804,11 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                           Icons.edit,
                           onEdit: () => _showEditDialog(
                             'Phone',
-                            profileCubit.phoneController.text,
-                            (value) => setState(() =>
-                                profileCubit.phoneController.text = value),
+                            context.read<ProfileCubit>().phoneController.text,
+                            (value) => setState(() => context
+                                .read<ProfileCubit>()
+                                .phoneController
+                                .text = value),
                           ),
                         ),
                         _buildProfileItem(
@@ -784,20 +816,24 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                           Icons.edit,
                           onEdit: () => _showEditDialog(
                             'Email',
-                            profileCubit.emailController.text,
-                            (value) => setState(() =>
-                                profileCubit.emailController.text = value),
+                            context.read<ProfileCubit>().emailController.text,
+                            (value) => setState(() => context
+                                .read<ProfileCubit>()
+                                .emailController
+                                .text = value),
                           ),
                         ),
 
                         _buildProfileItem(
-                          profileCubit.addressController.text,
+                          context.read<ProfileCubit>().addressController.text,
                           Icons.edit,
                           onEdit: () => _showEditDialog(
                             'Address',
-                            profileCubit.addressController.text,
-                            (value) => setState(() =>
-                                profileCubit.addressController.text = value),
+                            context.read<ProfileCubit>().addressController.text,
+                            (value) => setState(() => context
+                                .read<ProfileCubit>()
+                                .addressController
+                                .text = value),
                           ),
                         ),
 
@@ -836,15 +872,29 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                           child: ElevatedButton(
                             onPressed: () {
                               // Update the image through the cubit
-                              profileCubit.updateCustomerProfile(
-                                UserModel(
-                                  name: profileCubit.nameController.text,
-                                  phone: profileCubit.phoneController.text,
-                                  email: profileCubit.emailController.text,
-                                  address: profileCubit.addressController.text,
-                                ),
-                                imageFile: _imageFile,
-                              );
+                              context
+                                  .read<ProfileCubit>()
+                                  .updateCustomerProfile(
+                                    UserModel(
+                                      name: context
+                                          .read<ProfileCubit>()
+                                          .nameController
+                                          .text,
+                                      phone: context
+                                          .read<ProfileCubit>()
+                                          .phoneController
+                                          .text,
+                                      email: context
+                                          .read<ProfileCubit>()
+                                          .emailController
+                                          .text,
+                                      address: context
+                                          .read<ProfileCubit>()
+                                          .addressController
+                                          .text,
+                                    ),
+                                    imageFile: _imageFile,
+                                  );
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.cyanBlueColor,
@@ -1138,7 +1188,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
             builder: (context) {
               return NFCEnableDialog(
                 nfcValue: hasNfc ?? false,
-                profileCubit: profileCubit,
+                profileCubit: context.read<ProfileCubit>(),
               );
             },
           );
@@ -1151,7 +1201,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
         _switchStates['NFC'] = false;
       });
       if (mounted) {
-        profileCubit.enableNfc(false, '');
+        context.read<ProfileCubit>().enableNfc(false, '');
         await AppPreferences.setHasNfc(false);
         isDisabled = true;
       }
@@ -1213,7 +1263,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
           _switchStates['Fingerprint'] = true;
         });
         if (mounted) {
-          profileCubit.enableFingerprint(true);
+          context.read<ProfileCubit>().enableFingerprint(true);
           await AppPreferences.setHasFingerprint(true);
         }
       }
@@ -1222,7 +1272,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
         _switchStates['Fingerprint'] = false;
       });
       if (mounted) {
-        profileCubit.enableFingerprint(false);
+        context.read<ProfileCubit>().enableFingerprint(false);
         await AppPreferences.setHasFingerprint(false);
       }
     }

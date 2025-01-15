@@ -23,6 +23,7 @@ class CustomerProfileController {
     AppPreferences.setName(response['data']['name']);
     AppPreferences.setEmail(response['data']['email']);
     AppPreferences.setPhone(response['data']['phone']);
+    AppPreferences.setCurrentBalance(response['data']['currentBalance']);
 
     return UserModel.fromJson(response['data']);
   }

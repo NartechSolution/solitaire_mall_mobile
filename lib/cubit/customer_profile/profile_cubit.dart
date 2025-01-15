@@ -23,6 +23,8 @@ class ProfileCubit extends Cubit<ProfileState> {
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController oldPasswordController = TextEditingController();
 
+  num? currentBalance;
+
   String imageUrl = '';
 
   Future<void> getCustomerProfile() async {
@@ -37,6 +39,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         emailController.text = user.email ?? '';
         addressController.text = user.address ?? 'No address';
         imageUrl = user.avatar ?? '';
+        currentBalance = user.currentBalance;
         emit(ProfileSuccess(user));
       } else {
         emit(ProfileError('No internet connection'));

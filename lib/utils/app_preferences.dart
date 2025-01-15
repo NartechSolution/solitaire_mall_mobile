@@ -10,6 +10,7 @@ class AppPreferences {
   static const String _keyHasFingerprint = 'has_fingerprint';
   static const String _keyNFCRegistered = 'nfc_registered';
   static const String _keyFingerprintRegistered = 'fingerprint_registered';
+  static const String _keyCurrentBalance = 'currentBalance';
 
   static late SharedPreferences _preferences;
 
@@ -48,6 +49,11 @@ class AppPreferences {
         _keyHasFingerprint, hasFingerprint ?? false);
   }
 
+  static Future<bool> setCurrentBalance(num? currentBalance) async {
+    return await _preferences.setDouble(
+        _keyCurrentBalance, currentBalance?.toDouble() ?? 0);
+  }
+
   // Individual getters
   static String? getUserId() => _preferences.getString(_keyUserId);
   static String? getName() => _preferences.getString(_keyName);
@@ -56,13 +62,14 @@ class AppPreferences {
   static String? getToken() => _preferences.getString(_keyToken);
   static bool? getHasNfc() => _preferences.getBool(_keyHasNfc);
   static bool? getHasFingerprint() => _preferences.getBool(_keyHasFingerprint);
+  static num? getCurrentBalance() => _preferences.getDouble(_keyCurrentBalance);
 
   // Clear all user data
   static Future<bool> clearUserData() async {
     await _preferences.remove(_keyUserId);
     await _preferences.remove(_keyName);
-    await _preferences.remove(_keyEmail);
     await _preferences.remove(_keyPhone);
+    await _preferences.remove(_keyCurrentBalance);
     return true;
   }
 
