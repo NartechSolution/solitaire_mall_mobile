@@ -79,8 +79,6 @@ class _WalletTopupScreenState extends State<WalletTopupScreen> {
                       double.parse(selectedAmount ?? '0'))
                   .toString();
 
-              context.read<TopupCubit>().getPaymentHistory(page, limit);
-
               context.read<ProfileCubit>().getCustomerProfile();
 
               _amountController.clear();
@@ -89,11 +87,6 @@ class _WalletTopupScreenState extends State<WalletTopupScreen> {
                 selectedPaymentMethod = null;
               });
             } else if (state is SubmitTopupErrorState) {
-              _showErrorDialog(state.message);
-            }
-            if (state is GetPaymentHistorySuccessState) {
-              context.read<TopupCubit>().paymentHistory = state.paymentHistory;
-            } else if (state is GetPaymentHistoryErrorState) {
               _showErrorDialog(state.message);
             }
           },

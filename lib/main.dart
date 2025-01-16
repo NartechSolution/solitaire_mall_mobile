@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solitaire/cubit/auth/auth_cubit.dart';
 import 'package:solitaire/cubit/customer_profile/profile_cubit.dart';
+import 'package:solitaire/cubit/picker/picker_cubit.dart';
 import 'package:solitaire/cubit/topup/topup_cubit.dart';
 import 'package:solitaire/utils/app_preferences.dart';
 import 'screens/auth/start_screen.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => AuthCubit()),
         BlocProvider(create: (context) => ProfileCubit()),
         BlocProvider(create: (context) => TopupCubit()),
+        BlocProvider(create: (context) => PickerCubit()),
       ],
       child: MaterialApp(
         title: 'Solitaire',

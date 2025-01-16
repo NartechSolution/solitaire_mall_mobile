@@ -52,6 +52,7 @@ dependencies:
   intl_phone_field: ^3.2.0
   image_picker: ^1.0.0
   icons_launcher: ^3.0.0
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solitaire/constants/constant.dart';
+import 'package:solitaire/cubit/picker/picker_cubit.dart';
+import 'package:solitaire/screens/pickers/rating_screen.dart';
+import 'package:solitaire/utils/app_navigator.dart';
 
 class PickerProfileScreen extends StatefulWidget {
-  const PickerProfileScreen({
-    super.key,
-    required this.pickerName,
-    required this.pickerId,
-    required this.pickerRating,
-  });
-
-  final String pickerName;
-  final String pickerId;
-  final String pickerRating;
+  const PickerProfileScreen({super.key});
 
   @override
   State<PickerProfileScreen> createState() => _PickerProfileScreenState();
@@ -51,7 +46,7 @@ class _PickerProfileScreenState extends State<PickerProfileScreen> {
                           onPressed: () => Navigator.pop(context),
                           color: AppColors.purpleColor,
                         ),
-                        const Text(
+                        Text(
                           'Picker Profile',
                           style: TextStyle(
                             fontSize: 16,
@@ -67,52 +62,91 @@ class _PickerProfileScreenState extends State<PickerProfileScreen> {
                       child: Column(
                         children: [
                           // Profile Image
-                          Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.grey.shade300,
-                                width: 2,
+                          Hero(
+                            tag:
+                                context.read<PickerCubit>().pickers[0].id ?? "",
+                            child: Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.grey.shade300,
+                                  width: 2,
+                                ),
                               ),
-                            ),
-                            child: ClipOval(
-                              child: Image.asset(
-                                'assets/background.png',
-                                fit: BoxFit.cover,
+                              child: ClipOval(
+                                child: Image.network(
+                                  context
+                                          .read<PickerCubit>()
+                                          .pickers[0]
+                                          .avatar ??
+                                      "",
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
                           const SizedBox(height: 16),
                           // ID Number
-                          Text(
-                            'ID Number',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 14,
-                            ),
-                          ),
                           const Text(
-                            '#012345',
+                            'Picker Name',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          // Rating Stars
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(
-                              5,
-                              (index) => Icon(
-                                Icons.star,
-                                color:
-                                    index < 4 ? Colors.amber : Colors.grey[300],
-                                size: 20,
-                              ),
+                          Text(
+                            context.read<PickerCubit>().pickers[0].name ?? "",
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 14,
                             ),
+                          ),
+
+                          const SizedBox(height: 10),
+                          // Rating Stars
+                          Column(
+                            children: [
+                              const Text(
+                                'Rating',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(
+                                  5,
+                                  (index) {
+                                    if (context
+                                            .read<PickerCubit>()
+                                            .pickers[0]
+                                            .avgRating ==
+                                        null)
+                                      return const Icon(Icons.star,
+                                          color: Colors.grey, size: 20);
+
+                                    final double rating = context
+                                        .read<PickerCubit>()
+                                        .pickers[0]
+                                        .avgRating!;
+                                    if (index < rating.floor()) {
+                                      return const Icon(Icons.star,
+                                          color: Colors.amber, size: 20);
+                                    } else if (index == rating.floor() &&
+                                        rating % 1 >= 0.5) {
+                                      return const Icon(Icons.star_half,
+                                          color: Colors.amber, size: 20);
+                                    } else {
+                                      return const Icon(Icons.star_border,
+                                          color: Colors.amber, size: 20);
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -133,20 +167,36 @@ class _PickerProfileScreenState extends State<PickerProfileScreen> {
                       ),
                       child: Column(
                         children: [
-                          _buildProfileItem(widget.pickerName),
-                          _buildProfileItem(widget.pickerId),
-                          _buildProfileItem(widget.pickerRating),
                           _buildProfileItem(
-                              'Sulaimaniya st, Olaya Riyadh City KSA'),
+                              context.read<PickerCubit>().pickers[0].name ??
+                                  "Name"),
+                          _buildProfileItem(
+                              context.read<PickerCubit>().pickers[0].phone ??
+                                  "Phone"),
+                          _buildProfileItem(
+                              context.read<PickerCubit>().pickers[0].email ??
+                                  "Email"),
+                          _buildProfileItem(
+                              context.read<PickerCubit>().pickers[0].address ??
+                                  "Adress"),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 18),
                     // Submit Review Button
                     SizedBox(
                       width: double.infinity,
+                      height: 40,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          AppNavigator.push(
+                            context,
+                            RatingScreen(
+                                pickerId:
+                                    context.read<PickerCubit>().pickers[0].id ??
+                                        ""),
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF26A69A),
                           padding: const EdgeInsets.symmetric(vertical: 12),
@@ -158,7 +208,7 @@ class _PickerProfileScreenState extends State<PickerProfileScreen> {
                           'Submit a review',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 16,
+                            fontSize: 12,
                           ),
                         ),
                       ),
@@ -175,12 +225,12 @@ class _PickerProfileScreenState extends State<PickerProfileScreen> {
 
   Widget _buildProfileItem(String text) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
             color: Colors.grey.shade200,
-            width: 1,
+            width: 0.5,
           ),
         ),
       ),
@@ -189,7 +239,7 @@ class _PickerProfileScreenState extends State<PickerProfileScreen> {
           Text(
             text,
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 12,
               color: Colors.black87,
             ),
           ),
