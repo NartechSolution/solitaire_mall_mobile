@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solitaire/constants/constant.dart';
@@ -17,19 +19,9 @@ import 'package:solitaire/widgets/success_dialog.dart';
 import 'package:solitaire/widgets/nfc_enable_dialog.dart';
 
 class ProfileData {
-  String name;
-  String phone;
-  String email;
-  String address;
   String image;
 
-  ProfileData({
-    required this.name,
-    required this.phone,
-    required this.email,
-    required this.address,
-    required this.image,
-  });
+  ProfileData({required this.image});
 }
 
 class CustomerProfileScreen extends StatefulWidget {
@@ -41,10 +33,6 @@ class CustomerProfileScreen extends StatefulWidget {
 
 class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
   late ProfileData _profileData = ProfileData(
-    name: '',
-    phone: '',
-    email: '',
-    address: '',
     image: 'assets/background.png',
   );
   Map<String, bool> _switchStates = {
@@ -471,10 +459,6 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
             if (state is ProfileSuccess) {
               setState(() {
                 _profileData = ProfileData(
-                  name: context.read<ProfileCubit>().nameController.text,
-                  phone: context.read<ProfileCubit>().phoneController.text,
-                  email: context.read<ProfileCubit>().emailController.text,
-                  address: context.read<ProfileCubit>().addressController.text,
                   image: context.read<ProfileCubit>().imageUrl,
                 );
               });
@@ -778,7 +762,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
 
                         // Profile Information List
                         _buildProfileItem(
-                          _profileData.name,
+                          context.read<ProfileCubit>().nameController.text,
                           Icons.edit,
                           onEdit: () => _showEditDialog(
                             'Name',
@@ -790,7 +774,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                           ),
                         ),
                         _buildProfileItem(
-                          _profileData.phone,
+                          context.read<ProfileCubit>().phoneController.text,
                           Icons.edit,
                           onEdit: () => _showEditDialog(
                             'Phone',
@@ -802,7 +786,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                           ),
                         ),
                         _buildProfileItem(
-                          _profileData.email,
+                          context.read<ProfileCubit>().emailController.text,
                           Icons.edit,
                           onEdit: () => _showEditDialog(
                             'Email',

@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:solitaire/constants/constant.dart';
 import 'package:solitaire/cubit/auth/auth_cubit.dart';
 import 'package:solitaire/cubit/auth/auth_state.dart';
-import 'package:solitaire/screens/customer_profile/customer_profile_screen.dart';
+import 'package:solitaire/screens/dashboard/dashboard_screen.dart';
 import 'package:solitaire/utils/app_loading.dart';
 import 'package:solitaire/utils/app_navigator.dart';
 import 'package:solitaire/utils/app_preferences.dart';
@@ -247,8 +247,7 @@ class _LoginScreenState extends State<LoginScreen>
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is LoginSuccess) {
-            AppNavigator.pushReplacement(
-                context, const CustomerProfileScreen());
+            AppNavigator.pushReplacement(context, const DashboardScreen());
             _showSuccessDialog('Login Successfully');
           } else if (state is LoginError) {
             _showWarningMessage(state.message);
@@ -256,12 +255,10 @@ class _LoginScreenState extends State<LoginScreen>
             _showWarningMessage(state.message.replaceAll('Exception: ', ''));
           } else if (state is LoginWithFingerprintSuccess) {
             Navigator.pop(context); // Close dialog
-            AppNavigator.pushReplacement(
-                context, const CustomerProfileScreen());
+            AppNavigator.pushReplacement(context, const DashboardScreen());
             _showSuccessDialog('Login Successfully');
           } else if (state is LoginWithNfcSuccess) {
-            AppNavigator.pushReplacement(
-                context, const CustomerProfileScreen());
+            AppNavigator.pushReplacement(context, const DashboardScreen());
             _showSuccessDialog('Login Successfully');
           } else if (state is LoginWithNfcError) {
             _showWarningMessage(state.message.replaceAll('Exception: ', ''));
