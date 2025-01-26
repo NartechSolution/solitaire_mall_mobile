@@ -483,16 +483,18 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
             if (state is FingerprintEnableDisableSuccess) {
               if (mounted) {
                 hasFingerprint == false && isDisabled == false
-                    ? _showSuccessDialog('Fingerprint enabled successfully')
-                    : _showSuccessDialog('Fingerprint disabled successfully');
+                    ? _showSuccessDialog(
+                        'Fingerprint status updated successfully')
+                    : _showSuccessDialog(
+                        'Fingerprint status updated successfully');
               }
               context.read<ProfileCubit>().getCustomerProfile();
             }
             if (state is NfcEnableDisableSuccess) {
               if (mounted) {
                 hasNfc == false
-                    ? _showSuccessDialog('NFC enabled successfully')
-                    : _showSuccessDialog('NFC disabled successfully');
+                    ? _showSuccessDialog('NFC status updated successfully')
+                    : _showSuccessDialog('NFC status updated successfully');
               }
               context.read<ProfileCubit>().getCustomerProfile();
             }

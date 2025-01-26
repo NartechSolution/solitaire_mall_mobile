@@ -148,7 +148,6 @@ class _LoginScreenState extends State<LoginScreen>
                                   biometricOnly: true,
                                 ),
                               );
-
                               if (didAuthenticate && mounted) {
                                 final String? email = AppPreferences.getEmail();
                                 if (email != null) {

@@ -69,6 +69,8 @@ class AuthCubit extends Cubit<AuthState> {
       if (isConnected) {
         await _authController.loginWithNfc(nfcCardId);
         emit(LoginWithNfcSuccess());
+      } else {
+        emit(LoginWithNfcError('No internet connection'));
       }
     } catch (e) {
       emit(LoginWithNfcError(e.toString()));

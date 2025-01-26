@@ -59,14 +59,9 @@ class HomeScreen extends StatelessWidget {
                                 imageUrl ?? '',
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    height: 40,
-                                    width: 40,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[200],
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    child: const Icon(Icons.person),
+                                  return const Icon(
+                                    Icons.person,
+                                    size: 20,
                                   );
                                 },
                               ),
@@ -239,7 +234,7 @@ class HomeScreen extends StatelessWidget {
                                                   backgroundColor:
                                                       Colors.grey[200],
                                                   child: Image.asset(
-                                                    'assets/images/picker_image.png',
+                                                    'assets/background.png',
                                                     errorBuilder: (context,
                                                         error, stackTrace) {
                                                       return const Icon(

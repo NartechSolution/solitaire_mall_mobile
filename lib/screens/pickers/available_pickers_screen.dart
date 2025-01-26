@@ -8,6 +8,7 @@ import 'package:solitaire/cubit/picker/picker_cubit.dart';
 import 'package:solitaire/cubit/picker/picker_state.dart';
 import 'package:solitaire/screens/pickers/picker_profile_screen.dart';
 import 'package:solitaire/screens/pickers/rating_screen.dart';
+import 'package:solitaire/screens/pickers/requests_history.dart';
 import 'package:solitaire/utils/app_navigator.dart';
 
 class AvailablePickersScreen extends StatefulWidget {
@@ -17,35 +18,24 @@ class AvailablePickersScreen extends StatefulWidget {
   State<AvailablePickersScreen> createState() => _AvailablePickersScreenState();
 }
 
-class _AvailablePickersScreenState extends State<AvailablePickersScreen> {
-  final ScrollController _scrollController = ScrollController();
+class _AvailablePickersScreenState extends State<AvailablePickersScreen>
+    with SingleTickerProviderStateMixin {
   int page = 1;
   int limit = 10;
   bool isLoading = false;
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
     context.read<PickerCubit>().getPickers(page, limit);
-    _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    _tabController.dispose();
     super.dispose();
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
-        !isLoading) {
-      setState(() {
-        isLoading = true;
-      });
-      page++;
-      context.read<PickerCubit>().getPickers(page, limit);
-    }
   }
 
   @override
@@ -79,7 +69,6 @@ class _AvailablePickersScreenState extends State<AvailablePickersScreen> {
                 ),
               ),
               child: SingleChildScrollView(
-                controller: _scrollController,
                 child: Container(
                   margin: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
@@ -91,238 +80,304 @@ class _AvailablePickersScreenState extends State<AvailablePickersScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Back Button and Title Row
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.arrow_back, size: 20),
-                              onPressed: () => Navigator.pop(context),
-                              color: AppColors.purpleColor,
-                            ),
-                            const Text(
-                              'Available Pickers',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: AppColors.purpleColor,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                        // Tab Bar
+                        TabBar(
+                          controller: _tabController,
+                          labelColor: AppColors.purpleColor,
+                          unselectedLabelColor: Colors.grey,
+                          indicatorColor: AppColors.purpleColor,
+                          tabs: const [
+                            Tab(text: 'Available Pickers'),
+                            Tab(text: 'Request History'),
                           ],
                         ),
                         const SizedBox(height: 16),
 
-                        // Picker Cards
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: context
-                              .read<PickerCubit>()
-                              .pickers
-                              .length, // Number of pickers
-                          itemBuilder: (context, index) {
-                            return Container(
-                              margin: const EdgeInsets.only(bottom: 16),
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.1),
-                                    spreadRadius: 1,
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                        // Tab Bar View
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height -
+                              200, // Adjust height as needed
+                          child: TabBarView(
+                            controller: _tabController,
+                            children: [
+                              // Available Pickers Tab
+                              Column(
                                 children: [
-                                  // Index number
-                                  Text(
-                                    '${context.read<PickerCubit>().pickers.length - index}',
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-
-                                  // Profile Image
-                                  Hero(
-                                    tag:
-                                        'picker_image_${context.read<PickerCubit>().pickers[index].id}',
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: Image.network(
-                                        context
-                                                .read<PickerCubit>()
-                                                .pickers[index]
-                                                .avatar ??
-                                            '',
-                                        width: 50,
-                                        height: 50,
-                                        fit: BoxFit.cover,
-                                        loadingBuilder:
-                                            (context, child, loadingProgress) {
-                                          if (loadingProgress == null) {
-                                            return child;
-                                          }
-                                          return const Center(
-                                            child: CircularProgressIndicator(),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-
-                                  // Info Column
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          context
-                                                  .read<PickerCubit>()
-                                                  .pickers[index]
-                                                  .name ??
-                                              '',
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          context
-                                                  .read<PickerCubit>()
-                                                  .pickers[index]
-                                                  .phone ??
-                                              '',
-                                          style: const TextStyle(
-                                            fontSize: 10,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Row(
-                                          children: [
-                                            const Text(
-                                              'Rating ',
-                                              style: TextStyle(
-                                                fontSize: 10,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                            RatingBar.builder(
-                                              initialRating: context
-                                                      .read<PickerCubit>()
-                                                      .pickers[index]
-                                                      .avgRating ??
-                                                  0,
-                                              minRating: 0,
-                                              direction: Axis.horizontal,
-                                              allowHalfRating: true,
-                                              itemCount: 5,
-                                              itemSize: 10,
-                                              ignoreGestures: true,
-                                              itemBuilder: (context, index) =>
-                                                  const Icon(
-                                                Icons.star,
-                                                color: Colors.amber,
-                                              ),
-                                              unratedColor:
-                                                  Colors.amber.withOpacity(0.3),
-                                              onRatingUpdate: (rating) {},
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: context
+                                        .read<PickerCubit>()
+                                        .pickers
+                                        .length,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        margin:
+                                            const EdgeInsets.only(bottom: 16),
+                                        padding: const EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.grey.withOpacity(0.1),
+                                              spreadRadius: 1,
+                                              blurRadius: 4,
+                                              offset: const Offset(0, 2),
                                             ),
                                           ],
                                         ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  // Action Buttons Column
-                                  Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 20,
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            AppNavigator.push(
-                                              context,
-                                              PickerProfileScreen(),
-                                            );
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor:
-                                                AppColors.purpleColor,
-                                          ),
-                                          child: const Text(
-                                            'View',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 10,
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            // Index number
+                                            Text(
+                                              '${context.read<PickerCubit>().pickers.length - index}',
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.grey,
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      SizedBox(
-                                        height: 20,
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            AppNavigator.push(
-                                              context,
-                                              RatingScreen(
-                                                  pickerId: context
+                                            const SizedBox(width: 12),
+
+                                            // Profile Image
+                                            Hero(
+                                              tag:
+                                                  'picker_image_${context.read<PickerCubit>().pickers[index].id}',
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                child: Image.network(
+                                                  context
                                                           .read<PickerCubit>()
                                                           .pickers[index]
-                                                          .id ??
-                                                      ''),
-                                            );
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.green,
-                                          ),
-                                          child: const Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(
-                                                'Rate',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 10,
+                                                          .avatar ??
+                                                      '',
+                                                  width: 50,
+                                                  height: 50,
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return const Icon(
+                                                        Icons.error);
+                                                  },
+                                                  loadingBuilder: (context,
+                                                      child, loadingProgress) {
+                                                    if (loadingProgress ==
+                                                        null) {
+                                                      return child;
+                                                    }
+                                                    return const Center(
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    );
+                                                  },
                                                 ),
                                               ),
-                                              SizedBox(width: 4),
-                                              Icon(Icons.star,
-                                                  size: 10,
-                                                  color: Colors.white),
-                                            ],
-                                          ),
+                                            ),
+                                            const SizedBox(width: 12),
+
+                                            // Info Column
+                                            Expanded(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    context
+                                                            .read<PickerCubit>()
+                                                            .pickers[index]
+                                                            .name ??
+                                                        '',
+                                                    style: const TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    context
+                                                            .read<PickerCubit>()
+                                                            .pickers[index]
+                                                            .phone ??
+                                                        '',
+                                                    style: const TextStyle(
+                                                      fontSize: 10,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 4),
+                                                  Row(
+                                                    children: [
+                                                      const Text(
+                                                        'Rating ',
+                                                        style: TextStyle(
+                                                          fontSize: 10,
+                                                          color: Colors.grey,
+                                                        ),
+                                                      ),
+                                                      RatingBar.builder(
+                                                        initialRating: context
+                                                                .read<
+                                                                    PickerCubit>()
+                                                                .pickers[index]
+                                                                .avgRating
+                                                                ?.toDouble() ??
+                                                            0,
+                                                        minRating: 0,
+                                                        direction:
+                                                            Axis.horizontal,
+                                                        allowHalfRating: true,
+                                                        itemCount: 5,
+                                                        itemSize: 10,
+                                                        ignoreGestures: true,
+                                                        itemBuilder:
+                                                            (context, index) =>
+                                                                const Icon(
+                                                          Icons.star,
+                                                          color: Colors.amber,
+                                                        ),
+                                                        unratedColor: Colors
+                                                            .amber
+                                                            .withOpacity(0.3),
+                                                        onRatingUpdate:
+                                                            (rating) {},
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+
+                                            // Action Buttons Column
+                                            Column(
+                                              children: [
+                                                SizedBox(
+                                                  height: 20,
+                                                  child: ElevatedButton(
+                                                    onPressed: () {
+                                                      AppNavigator.push(
+                                                        context,
+                                                        PickerProfileScreen(
+                                                            index: index),
+                                                      );
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          AppColors.purpleColor,
+                                                    ),
+                                                    child: const Text(
+                                                      'View',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 10,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 8),
+                                                SizedBox(
+                                                  height: 20,
+                                                  child: ElevatedButton(
+                                                    onPressed: () {
+                                                      AppNavigator.push(
+                                                        context,
+                                                        RatingScreen(
+                                                            pickerId: context
+                                                                    .read<
+                                                                        PickerCubit>()
+                                                                    .pickers[
+                                                                        index]
+                                                                    .id ??
+                                                                ''),
+                                                      );
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          Colors.green,
+                                                    ),
+                                                    child: const Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Text(
+                                                          'Rate',
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 10,
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 4),
+                                                        Icon(Icons.star,
+                                                            size: 10,
+                                                            color:
+                                                                Colors.white),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
+                                      );
+                                    },
                                   ),
+                                  if (context
+                                          .read<PickerCubit>()
+                                          .pickers
+                                          .length >=
+                                      limit)
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16.0),
+                                      child: ElevatedButton(
+                                        onPressed: !isLoading
+                                            ? () {
+                                                setState(() {
+                                                  isLoading = true;
+                                                });
+                                                page++;
+                                                context
+                                                    .read<PickerCubit>()
+                                                    .getPickers(page, limit);
+                                              }
+                                            : null,
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              AppColors.purpleColor,
+                                        ),
+                                        child: isLoading
+                                            ? const SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  strokeWidth: 2,
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(Colors.white),
+                                                ),
+                                              )
+                                            : const Text('Load More'),
+                                      ),
+                                    ),
                                 ],
                               ),
-                            );
-                          },
-                        ),
-
-                        // Add loading indicator at the bottom
-                        if (isLoading)
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Center(
-                              child: CircularProgressIndicator(),
-                            ),
+                              RequestHistory(),
+                            ],
                           ),
+                        ),
                       ],
                     ),
                   ),
