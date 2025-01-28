@@ -31,3 +31,13 @@ class PickerRequestStatusError extends PickerRequestState {
 
   PickerRequestStatusError(this.message);
 }
+
+class PickerRequestCancelLoading extends PickerRequestState {}
+
+class PickerRequestCancelSuccess extends PickerRequestState {}
+
+class PickerRequestCancelError extends PickerRequestState {
+  final String message;
+
+  PickerRequestCancelError(this.message);
+}

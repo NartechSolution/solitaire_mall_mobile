@@ -23,10 +23,16 @@ class _RequestHistoryState extends State<RequestHistory> {
       appBar: AppBar(
         title: const Text('Request History'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              context.read<PickerRequestCubit>().getRequestStatus();
+          BlocBuilder<PickerRequestCubit, PickerRequestState>(
+            builder: (context, state) {
+              return IconButton(
+                icon: const Icon(Icons.refresh),
+                onPressed: state is PickerRequestStatusLoading
+                    ? null // Disable button while loading
+                    : () {
+                        context.read<PickerRequestCubit>().getRequestStatus();
+                      },
+              );
             },
           ),
         ],
@@ -37,9 +43,22 @@ class _RequestHistoryState extends State<RequestHistory> {
             print(state.requestStatus);
           } else if (state is PickerRequestStatusError) {
             print(state.message);
+          } else if (state is PickerRequestCancelSuccess) {
+            context.read<PickerRequestCubit>().getRequestStatus();
+          } else if (state is PickerRequestCancelError) {
+            print(state.message);
           }
         },
         builder: (context, state) {
+          if (state is PickerRequestStatusLoading) {
+            return const Center(
+              child: AppLoading(
+                color: Colors.blue,
+                size: 24,
+              ),
+            );
+          }
+
           if (state is PickerRequestStatusSuccess) {
             return ListView.builder(
               shrinkWrap: true,
@@ -103,9 +122,27 @@ class _RequestHistoryState extends State<RequestHistory> {
                               ),
                             ),
                             actions: [
+                              if (request.request?.status == 'PENDING')
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    context
+                                        .read<PickerRequestCubit>()
+                                        .cancelRequest(
+                                            request.request?.id ?? '');
+
+                                    context
+                                        .read<PickerRequestCubit>()
+                                        .getRequestStatus();
+                                  },
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Colors.red,
+                                  ),
+                                  child: const Text('Cancel Request'),
+                                ),
                               TextButton(
                                 onPressed: () => Navigator.pop(context),
-                                child: Text('Close'),
+                                child: const Text('Close'),
                               ),
                             ],
                           ),

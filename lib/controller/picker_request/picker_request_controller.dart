@@ -45,4 +45,20 @@ class PickerRequestController {
         .map((item) => RequestStatusModel.fromJson(item))
         .toList();
   }
+
+  Future<void> cancelRequest(String requestId) async {
+    final token = AppPreferences.getToken();
+    final url = "/api/v1/picker-requests/cancel";
+    await _httpService.request(
+      url,
+      method: HttpMethod.patch,
+      data: {
+        'requestId': requestId,
+      },
+      additionalHeaders: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+  }
 }

@@ -66,4 +66,21 @@ class PickerRequestCubit extends Cubit<PickerRequestState> {
       emit(PickerRequestStatusError(e.toString()));
     }
   }
+
+  Future<void> cancelRequest(String requestId) async {
+    emit(PickerRequestCancelLoading());
+    try {
+      // check internet connection
+      final connectivityResult = await Connectivity().checkConnectivity();
+      if (connectivityResult == ConnectivityResult.none) {
+        emit(PickerRequestCancelError('No internet connection'));
+        return;
+      }
+
+      await _pickerRequestController.cancelRequest(requestId);
+      emit(PickerRequestCancelSuccess());
+    } catch (e) {
+      emit(PickerRequestCancelError(e.toString()));
+    }
+  }
 }
