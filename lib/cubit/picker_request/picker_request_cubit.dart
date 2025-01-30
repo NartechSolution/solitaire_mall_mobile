@@ -2,7 +2,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solitaire/controller/picker_request/picker_request_controller.dart';
 import 'package:solitaire/cubit/picker_request/picker_request_state.dart';
-import 'package:solitaire/model/request_status_model.dart';
 
 class PickerRequestCubit extends Cubit<PickerRequestState> {
   final PickerRequestController _pickerRequestController =
@@ -35,19 +34,13 @@ class PickerRequestCubit extends Cubit<PickerRequestState> {
       }
 
       await _pickerRequestController.submitRequest(
-        pickerId,
-        location,
-        latitude,
-        longitude,
-      );
+          pickerId, location, latitude, longitude);
 
       emit(PickerRequestSuccess('Request submitted successfully'));
     } catch (e) {
       emit(PickerRequestError(e.toString()));
     }
   }
-
-  List<RequestStatusModel> requestStatus = [];
 
   Future<void> getRequestStatus() async {
     emit(PickerRequestStatusLoading());
@@ -60,7 +53,7 @@ class PickerRequestCubit extends Cubit<PickerRequestState> {
       }
 
       final requestStatus = await _pickerRequestController.getRequestStatus();
-      this.requestStatus = requestStatus;
+
       emit(PickerRequestStatusSuccess(requestStatus));
     } catch (e) {
       emit(PickerRequestStatusError(e.toString()));

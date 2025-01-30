@@ -29,7 +29,7 @@ class PickerRequestController {
     );
   }
 
-  Future<List<RequestStatusModel>> getRequestStatus() async {
+  Future<RequestStatusModel> getRequestStatus() async {
     final token = AppPreferences.getToken();
     final url = "/api/v1/picker-requests/customer/status";
     final response = await _httpService.request(
@@ -40,10 +40,7 @@ class PickerRequestController {
         'Content-Type': 'application/json',
       },
     );
-    print(response['data']['requests']);
-    return (response['data']['requests'] as List)
-        .map((item) => RequestStatusModel.fromJson(item))
-        .toList();
+    return RequestStatusModel.fromJson(response['data']);
   }
 
   Future<void> cancelRequest(String requestId) async {

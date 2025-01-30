@@ -256,7 +256,6 @@ class _AvailablePickersScreenState extends State<AvailablePickersScreen>
                                                 ],
                                               ),
                                             ),
-
                                             // Action Buttons Column
                                             Column(
                                               children: [

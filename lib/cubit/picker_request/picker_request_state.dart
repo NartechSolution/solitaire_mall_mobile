@@ -21,7 +21,7 @@ class PickerRequestError extends PickerRequestState {
 class PickerRequestStatusLoading extends PickerRequestState {}
 
 class PickerRequestStatusSuccess extends PickerRequestState {
-  final List<RequestStatusModel> requestStatus;
+  final RequestStatusModel requestStatus;
 
   PickerRequestStatusSuccess(this.requestStatus);
 }
