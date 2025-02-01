@@ -83,7 +83,30 @@ class _RequestHistoryState extends State<RequestHistory> {
             );
           }
 
+          if (state is PickerRequestStatusError) {
+            return const Center(
+              child: Text(
+                'No active request found',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            );
+          }
+
           if (state is PickerRequestStatusSuccess) {
+            if (state.requestStatus.pickerDetails == null) {
+              return const Center(
+                child: Text(
+                  'No active request found',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              );
+            }
             return Padding(
               padding: const EdgeInsets.all(10.0),
               child: Hero(
@@ -182,29 +205,27 @@ class _RequestHistoryState extends State<RequestHistory> {
                                           'N/A'),
                                   const SizedBox(height: 24),
                                   if (state.requestStatus.request?.status ==
-                                      'PENDING')
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.red.shade50,
-                                          foregroundColor: Colors.red,
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 16),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
+                                          'PENDING' ||
+                                      state.requestStatus.request?.status ==
+                                          'ACCEPTED')
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                        foregroundColor: Colors.red,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        context
+                                            .read<PickerRequestCubit>()
+                                            .cancelRequest(state.requestStatus
+                                                    .request?.id ??
+                                                '');
+                                      },
+                                      child: const Text(
+                                        'Cancel Request',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
                                         ),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          context
-                                              .read<PickerRequestCubit>()
-                                              .cancelRequest(state.requestStatus
-                                                      .request?.id ??
-                                                  '');
-                                        },
-                                        child: const Text('Cancel Request'),
                                       ),
                                     ),
                                 ],
@@ -461,7 +482,7 @@ class _RequestHistoryState extends State<RequestHistory> {
             label,
             style: TextStyle(
               color: Colors.grey[600],
-              fontSize: 13,
+              fontSize: 12,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -469,7 +490,7 @@ class _RequestHistoryState extends State<RequestHistory> {
           Text(
             value,
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 12,
               fontWeight: FontWeight.w500,
             ),
           ),

@@ -49,9 +49,7 @@ class PickerRequestController {
     await _httpService.request(
       url,
       method: HttpMethod.patch,
-      data: {
-        'requestId': requestId,
-      },
+      data: {'requestId': requestId},
       additionalHeaders: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',

@@ -41,3 +41,13 @@ class LoginWithNfcError extends AuthState {
 
   LoginWithNfcError(this.message);
 }
+
+class RegisterNfcCardLoading extends AuthState {}
+
+class RegisterNfcCardSuccess extends AuthState {}
+
+class RegisterNfcCardError extends AuthState {
+  final String message;
+
+  RegisterNfcCardError(this.message);
+}

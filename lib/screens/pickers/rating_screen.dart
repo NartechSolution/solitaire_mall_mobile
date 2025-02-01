@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -43,9 +45,12 @@ class _RatingScreenState extends State<RatingScreen> {
       body: SafeArea(
         child: BlocConsumer<PickerCubit, PickerState>(
           listener: (context, state) {
+            print("State: $state");
             if (state is PickerReviewSuccessState) {
-              _showSuccessDialog('Review submitted successfully');
+              print("I am here ................................");
               context.read<PickerCubit>().getPickers(1, 10);
+              _showSuccessDialog('Review submitted successfully');
+              Navigator.pop(context);
               Navigator.pop(context);
             } else if (state is PickerReviewErrorState) {
               _showErrorDialog(state.message);

@@ -6,9 +6,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:solitaire/constants/constant.dart';
 import 'package:solitaire/cubit/auth/auth_cubit.dart';
 import 'package:solitaire/cubit/auth/auth_state.dart';
+import 'package:solitaire/screens/dashboard/dashboard_screen.dart';
 import 'package:solitaire/utils/app_loading.dart';
 import 'package:solitaire/utils/app_navigator.dart';
 import 'package:solitaire/widgets/error_dialog.dart';
+import 'package:solitaire/widgets/nfc_register_dialog.dart';
 import 'login_screen.dart';
 import 'package:solitaire/widgets/success_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
@@ -66,6 +68,17 @@ class _StartScreenState extends State<StartScreen> {
             _showSuccessDialog();
           }
           if (state is RegisterError) {
+            ErrorDialog.show(
+              context,
+              title: state.message.replaceAll("Exception:", ""),
+              buttonText: 'OK',
+            );
+          }
+          if (state is RegisterNfcCardSuccess) {
+            AppNavigator.push(context, const DashboardScreen());
+            _showSuccessDialog();
+          }
+          if (state is RegisterNfcCardError) {
             ErrorDialog.show(
               context,
               title: state.message.replaceAll("Exception:", ""),
@@ -321,6 +334,53 @@ class _StartScreenState extends State<StartScreen> {
                                         ),
                                 ),
                               ),
+                              const Divider(color: AppColors.purpleColor),
+                              const Center(
+                                  child: Text('or Sign up with NFC Card')),
+                              const SizedBox(height: 10),
+                              state is RegisterNfcCardLoading
+                                  ? const AppLoading(
+                                      color: Colors.white,
+                                      size: 50,
+                                    )
+                                  : Container(
+                                      width: 80,
+                                      height: 90,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.transparent,
+                                      ),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (context) {
+                                              return NFCRegisterDialog(
+                                                authCubit:
+                                                    BlocProvider.of<AuthCubit>(
+                                                        context),
+                                              );
+                                            },
+                                          );
+                                        },
+                                        child: Container(
+                                          margin:
+                                              const EdgeInsets.only(left: 20),
+                                          width: 80,
+                                          height: 90,
+                                          child: FadeTransition(
+                                            opacity:
+                                                const AlwaysStoppedAnimation(
+                                                    1.0),
+                                            child: Image.asset(
+                                              'assets/nfc.png',
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                               const Divider(color: AppColors.purpleColor),
                               const Center(child: Text('or Sign up with')),
                               const SizedBox(height: 5),

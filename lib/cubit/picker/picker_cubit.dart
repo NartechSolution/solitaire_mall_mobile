@@ -41,7 +41,11 @@ class PickerCubit extends Cubit<PickerState> {
         emit(PickerReviewErrorState('No internet connection'));
         return;
       }
-      await _pickerController.submitReview(pickerId, rating, comments);
+      await _pickerController.submitReview(
+        pickerId,
+        rating,
+        comments,
+      );
       emit(PickerReviewSuccessState());
       getPickers(1, 10);
     } catch (error) {

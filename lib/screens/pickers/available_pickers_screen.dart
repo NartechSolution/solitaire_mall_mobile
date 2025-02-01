@@ -9,6 +9,7 @@ import 'package:solitaire/cubit/picker/picker_state.dart';
 import 'package:solitaire/screens/pickers/picker_profile_screen.dart';
 import 'package:solitaire/screens/pickers/rating_screen.dart';
 import 'package:solitaire/screens/pickers/requests_history.dart';
+import 'package:solitaire/utils/app_loading.dart';
 import 'package:solitaire/utils/app_navigator.dart';
 
 class AvailablePickersScreen extends StatefulWidget {
@@ -173,8 +174,11 @@ class _AvailablePickersScreenState extends State<AvailablePickersScreen>
                                                       return child;
                                                     }
                                                     return const Center(
-                                                      child:
-                                                          CircularProgressIndicator(),
+                                                      child: AppLoading(
+                                                        color: AppColors
+                                                            .purpleColor,
+                                                        size: 15,
+                                                      ),
                                                     );
                                                   },
                                                 ),

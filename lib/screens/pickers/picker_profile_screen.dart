@@ -230,20 +230,23 @@ class _PickerProfileScreenState extends State<PickerProfileScreen> {
                                                 .read<PickerCubit>()
                                                 .pickers[widget.index]
                                                 .avgRating ==
-                                            null)
+                                            null) {
                                           return const Icon(Icons.star,
                                               color: Colors.grey, size: 20);
+                                        }
 
                                         final double rating = context
                                             .read<PickerCubit>()
                                             .pickers[widget.index]
                                             .avgRating!
                                             .toDouble();
-                                        if (index < rating.floor()) {
+                                        final double difference =
+                                            rating - index;
+
+                                        if (difference >= 1) {
                                           return const Icon(Icons.star,
                                               color: Colors.amber, size: 20);
-                                        } else if (index == rating.floor() &&
-                                            rating % 1 >= 0.5) {
+                                        } else if (difference > 0) {
                                           return const Icon(Icons.star_half,
                                               color: Colors.amber, size: 20);
                                         } else {
