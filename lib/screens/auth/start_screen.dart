@@ -276,6 +276,7 @@ class _StartScreenState extends State<StartScreen> {
                               ),
                               const SizedBox(height: 10),
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Checkbox(
                                     activeColor: Colors.orange,
@@ -294,7 +295,7 @@ class _StartScreenState extends State<StartScreen> {
                                     ),
                                   ),
                                   const Text(
-                                    'Personal Data',
+                                    ' Personal Data',
                                     style: TextStyle(
                                       color: AppColors.purpleColor,
                                       fontWeight: FontWeight.bold,
