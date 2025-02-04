@@ -3,9 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open to get your current position.</string>
+	<string>This app needs access to location to show your position on Google Maps and provide accurate navigation.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app needs access to location when in the background.</string>
+	<string>This app needs background location access to provide navigation features even when the app is in background.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app needs location access to show your position on Google Maps and provide navigation features.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -55,5 +57,7 @@
 	<string>This app needs access to photo library to pick profile image</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This app needs camera access to capture profile photo</string>
+	<key>GMSApiKey</key>
+	<string>AIzaSyBcdPY1bQKSv0C1lQq-nYb3kBcjANsY3Fk</string>
 </dict>
 </plist>
