@@ -7,7 +7,6 @@ import 'package:solitaire/cubit/customer_profile/profile_cubit.dart';
 import 'package:solitaire/cubit/customer_profile/profile_state.dart';
 import 'package:solitaire/model/user_model.dart';
 import 'package:solitaire/screens/auth/start_screen.dart';
-import 'package:solitaire/screens/customer_profile/select_services_screen.dart';
 import 'package:solitaire/screens/customer_profile/wallet_topup_screen.dart';
 import 'package:solitaire/utils/app_loading.dart';
 import 'package:solitaire/utils/app_navigator.dart';
@@ -451,592 +450,641 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: BlocConsumer<ProfileCubit, ProfileState>(
-          listener: (context, state) {
-            if (state is ProfileSuccess) {
-              setState(() {
-                _profileData = ProfileData(
-                  image: context.read<ProfileCubit>().imageUrl,
-                );
-              });
-            }
-            if (state is ProfileUpdateSuccess) {
-              if (mounted) {
-                _showSuccessDialog('Profile updated successfully');
-                context.read<ProfileCubit>().getCustomerProfile();
-              }
-            }
-            if (state is ProfileUpdateError) {
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      state.message.replaceAll('Exception:', ''),
-                    ),
+    return WillPopScope(
+      onWillPop: () async {
+        // Confirmation dialog to exit
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(
+              'Are you sure you want to exit?',
+              style: TextStyle(
+                color: AppColors.purpleColor,
+                fontSize: 12,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: AppColors.purpleColor,
+                    fontSize: 12,
                   ),
-                );
-              }
-            }
-            if (state is FingerprintEnableDisableSuccess) {
-              if (mounted) {
-                hasFingerprint == false && isDisabled == false
-                    ? _showSuccessDialog(
-                        'Fingerprint status updated successfully')
-                    : _showSuccessDialog(
-                        'Fingerprint status updated successfully');
-              }
-              context.read<ProfileCubit>().getCustomerProfile();
-            }
-            if (state is NfcEnableDisableSuccess) {
-              if (mounted) {
-                hasNfc == false
-                    ? _showSuccessDialog('NFC status updated successfully')
-                    : _showSuccessDialog('NFC status updated successfully');
-              }
-              context.read<ProfileCubit>().getCustomerProfile();
-            }
-            if (state is NfcEnableDisableError) {
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.message.replaceAll('Exception:', '')),
-                  ),
-                );
-              }
-            }
-            if (state is FingerprintEnableDisableError) {
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content:
-                          Text(state.message.replaceAll('Exception:', ''))),
-                );
-                hasFingerprint = false;
-                context.read<ProfileCubit>().getCustomerProfile();
-              }
-            }
-          },
-          builder: (context, state) {
-            return Container(
-              height: MediaQuery.of(context).size.height,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/background.png'),
-                  fit: BoxFit.cover,
                 ),
               ),
-              child: SingleChildScrollView(
-                child: Container(
-                  margin: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(10),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Exit',
+                  style: TextStyle(
+                    color: AppColors.purpleColor,
+                    fontSize: 12,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Back Button and Title Row
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.arrow_back, size: 20),
-                              onPressed: () => Navigator.pop(context),
-                              color: AppColors.purpleColor,
-                            ),
-                            const Text(
-                              'Customer Profile',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: AppColors.purpleColor,
-                                fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        );
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: BlocConsumer<ProfileCubit, ProfileState>(
+            listener: (context, state) {
+              if (state is ProfileSuccess) {
+                setState(() {
+                  _profileData = ProfileData(
+                    image: context.read<ProfileCubit>().imageUrl,
+                  );
+                });
+              }
+              if (state is ProfileUpdateSuccess) {
+                if (mounted) {
+                  _showSuccessDialog('Profile updated successfully');
+                  context.read<ProfileCubit>().getCustomerProfile();
+                }
+              }
+              if (state is ProfileUpdateError) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        state.message.replaceAll('Exception:', ''),
+                      ),
+                    ),
+                  );
+                }
+              }
+              if (state is FingerprintEnableDisableSuccess) {
+                if (mounted) {
+                  hasFingerprint == false && isDisabled == false
+                      ? _showSuccessDialog(
+                          'Fingerprint status updated successfully')
+                      : _showSuccessDialog(
+                          'Fingerprint status updated successfully');
+                }
+                context.read<ProfileCubit>().getCustomerProfile();
+              }
+              if (state is NfcEnableDisableSuccess) {
+                if (mounted) {
+                  hasNfc == false
+                      ? _showSuccessDialog('NFC status updated successfully')
+                      : _showSuccessDialog('NFC status updated successfully');
+                }
+                context.read<ProfileCubit>().getCustomerProfile();
+              }
+              if (state is NfcEnableDisableError) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.message.replaceAll('Exception:', '')),
+                    ),
+                  );
+                }
+              }
+              if (state is FingerprintEnableDisableError) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content:
+                            Text(state.message.replaceAll('Exception:', ''))),
+                  );
+                  hasFingerprint = false;
+                  context.read<ProfileCubit>().getCustomerProfile();
+                }
+              }
+            },
+            builder: (context, state) {
+              return Container(
+                height: MediaQuery.of(context).size.height,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/background.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  child: Container(
+                    margin: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Back Button and Title Row
+                          Row(
+                            children: [
+                              // IconButton(
+                              //   icon: const Icon(Icons.arrow_back, size: 20),
+                              //   onPressed: () => Navigator.pop(context),
+                              //   color: AppColors.purpleColor,
+                              // ),
+                              const Text(
+                                'Customer Profile',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: AppColors.purpleColor,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
 
-                        // Profile Section with Image and Wallet
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            // Profile Image
-                            Stack(
-                              children: [
-                                GestureDetector(
-                                  onTap: () => _showFullScreenImage(
-                                    _profileData.image,
-                                  ),
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.3,
-                                    height: 120,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: AppColors.purpleColor,
-                                        width: 1,
-                                      ),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: _profileData.image
-                                              .startsWith('http')
-                                          ? Image.network(
-                                              _profileData.image,
-                                              fit: BoxFit.cover,
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                return Image.asset(
-                                                  'assets/background.png',
-                                                  fit: BoxFit.cover,
-                                                );
-                                              },
-                                              loadingBuilder: (context, child,
-                                                  loadingProgress) {
-                                                if (loadingProgress == null)
-                                                  return child;
-                                                return Center(
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    value: loadingProgress
-                                                                .expectedTotalBytes !=
-                                                            null
-                                                        ? loadingProgress
-                                                                .cumulativeBytesLoaded /
-                                                            loadingProgress
-                                                                .expectedTotalBytes!
-                                                        : null,
-                                                    color:
-                                                        AppColors.purpleColor,
-                                                  ),
-                                                );
-                                              },
-                                            )
-                                          : Image.file(
-                                              File(_profileData.image),
-                                              fit: BoxFit.cover,
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                return Image.asset(
-                                                  'assets/background.png',
-                                                  fit: BoxFit.cover,
-                                                );
-                                              },
-                                            ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: Container(
-                                    width: 30,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.purpleColor,
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Colors.white,
-                                        size: 15,
-                                      ),
-                                      onPressed: _pickImage,
-                                      constraints: const BoxConstraints(
-                                        minWidth: 30,
-                                        minHeight: 30,
-                                      ),
-                                      padding: EdgeInsets.zero,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            // Wallet Card
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              height: 120,
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.1),
-                                    spreadRadius: 1,
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 1),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                          // Profile Section with Image and Wallet
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              // Profile Image
+                              Stack(
                                 children: [
-                                  const Text(
-                                    'Wallet',
-                                    style: TextStyle(
-                                      color: AppColors.purpleColor,
-                                      fontSize: 12,
+                                  GestureDetector(
+                                    onTap: () => _showFullScreenImage(
+                                      _profileData.image,
                                     ),
-                                  ),
-                                  const Text(
-                                    'Current balance',
-                                    style: TextStyle(
-                                      color: Colors.green,
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Column(
-                                    children: [
-                                      // ignore: prefer_const_constructors
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            context
-                                                .read<ProfileCubit>()
-                                                .currentBalance
-                                                .toString(),
-                                            style: TextStyle(
-                                              color: AppColors.purpleColor,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            ' SAR',
-                                            style: TextStyle(
-                                              color: AppColors.purpleColor,
-                                              fontSize: 10,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 4),
-                                      SizedBox(
-                                        width: double.infinity,
-                                        height: 30,
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            AppNavigator.push(
-                                              context,
-                                              const WalletTopupScreen(),
-                                            );
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor:
-                                                AppColors.secondaryColor,
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 16,
-                                              vertical: 8,
-                                            ),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                          ),
-                                          child: const Text(
-                                            'Topup Wallet',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 10,
-                                            ),
-                                          ),
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.3,
+                                      height: 120,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: AppColors.purpleColor,
+                                          width: 1,
                                         ),
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
-                                    ],
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: _profileData.image
+                                                .startsWith('http')
+                                            ? Image.network(
+                                                _profileData.image,
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return Image.asset(
+                                                    'assets/background.png',
+                                                    fit: BoxFit.cover,
+                                                  );
+                                                },
+                                                loadingBuilder: (context, child,
+                                                    loadingProgress) {
+                                                  if (loadingProgress == null)
+                                                    return child;
+                                                  return Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      value: loadingProgress
+                                                                  .expectedTotalBytes !=
+                                                              null
+                                                          ? loadingProgress
+                                                                  .cumulativeBytesLoaded /
+                                                              loadingProgress
+                                                                  .expectedTotalBytes!
+                                                          : null,
+                                                      color:
+                                                          AppColors.purpleColor,
+                                                    ),
+                                                  );
+                                                },
+                                              )
+                                            : Image.file(
+                                                File(_profileData.image),
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return Image.asset(
+                                                    'assets/background.png',
+                                                    fit: BoxFit.cover,
+                                                  );
+                                                },
+                                              ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.purpleColor,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: IconButton(
+                                        icon: const Icon(
+                                          Icons.edit,
+                                          color: Colors.white,
+                                          size: 15,
+                                        ),
+                                        onPressed: _pickImage,
+                                        constraints: const BoxConstraints(
+                                          minWidth: 30,
+                                          minHeight: 30,
+                                        ),
+                                        padding: EdgeInsets.zero,
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-
-                        // Profile Information List
-                        _buildProfileItem(
-                          context.read<ProfileCubit>().nameController.text,
-                          Icons.edit,
-                          onEdit: () => _showEditDialog(
-                            'Name',
-                            context.read<ProfileCubit>().nameController.text,
-                            (value) => setState(() => context
-                                .read<ProfileCubit>()
-                                .nameController
-                                .text = value),
-                          ),
-                        ),
-                        _buildProfileItem(
-                          context.read<ProfileCubit>().phoneController.text,
-                          Icons.edit,
-                          onEdit: () => _showEditDialog(
-                            'Phone',
-                            context.read<ProfileCubit>().phoneController.text,
-                            (value) => setState(() => context
-                                .read<ProfileCubit>()
-                                .phoneController
-                                .text = value),
-                          ),
-                        ),
-                        _buildProfileItem(
-                          context.read<ProfileCubit>().emailController.text,
-                          Icons.edit,
-                          onEdit: () => _showEditDialog(
-                            'Email',
-                            context.read<ProfileCubit>().emailController.text,
-                            (value) => setState(() => context
-                                .read<ProfileCubit>()
-                                .emailController
-                                .text = value),
-                          ),
-                        ),
-
-                        _buildProfileItem(
-                          context.read<ProfileCubit>().addressController.text,
-                          Icons.edit,
-                          onEdit: () => _showEditDialog(
-                            'Address',
-                            context.read<ProfileCubit>().addressController.text,
-                            (value) => setState(() => context
-                                .read<ProfileCubit>()
-                                .addressController
-                                .text = value),
-                          ),
-                        ),
-
-                        // Update Profile Button
-                        const SizedBox(height: 20),
-
-                        // reset password button
-                        SizedBox(
-                          height: 40,
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _showResetPasswordDialog();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: const Text(
-                              'Reset Password',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 5),
-
-                        SizedBox(
-                          height: 40,
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Update the image through the cubit
-                              context
-                                  .read<ProfileCubit>()
-                                  .updateCustomerProfile(
-                                    UserModel(
-                                      name: context
-                                          .read<ProfileCubit>()
-                                          .nameController
-                                          .text,
-                                      phone: context
-                                          .read<ProfileCubit>()
-                                          .phoneController
-                                          .text,
-                                      email: context
-                                          .read<ProfileCubit>()
-                                          .emailController
-                                          .text,
-                                      address: context
-                                          .read<ProfileCubit>()
-                                          .addressController
-                                          .text,
+                              // Wallet Card
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                height: 120,
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.1),
+                                      spreadRadius: 1,
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 1),
                                     ),
-                                    imageFile: _imageFile,
-                                  );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.cyanBlueColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: state is ProfileLoading
-                                ? const AppLoading(
-                                    color: Colors.white,
-                                    size: 20,
-                                  )
-                                : const Text(
-                                    'Update Profile',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 5),
-
-                        // Request Services Button
-                        SizedBox(
-                          height: 40,
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              AppNavigator.push(
-                                context,
-                                const SelectServicesScreen(),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.purpleColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: const Text(
-                              'Request Services',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 5),
-                        // logout button
-                        SizedBox(
-                          height: 40,
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    backgroundColor: Colors.white,
-                                    title: const Text(
-                                      'Confirm Logout',
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Wallet',
                                       style: TextStyle(
                                         color: AppColors.purpleColor,
                                         fontSize: 12,
                                       ),
                                     ),
-                                    content: const Text(
-                                      'Are you sure you want to logout?',
+                                    const Text(
+                                      'Current balance',
                                       style: TextStyle(
-                                        color: Colors.black87,
+                                        color: Colors.green,
                                         fontSize: 10,
                                       ),
                                     ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: const Text(
-                                          'Cancel',
-                                          style: TextStyle(
-                                            color: AppColors.purpleColor,
-                                            fontSize: 10,
+                                    const SizedBox(height: 4),
+                                    Column(
+                                      children: [
+                                        // ignore: prefer_const_constructors
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              context
+                                                  .read<ProfileCubit>()
+                                                  .currentBalance
+                                                  .toString(),
+                                              style: TextStyle(
+                                                color: AppColors.purpleColor,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              ' SAR',
+                                              style: TextStyle(
+                                                color: AppColors.purpleColor,
+                                                fontSize: 10,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 4),
+                                        SizedBox(
+                                          width: double.infinity,
+                                          height: 30,
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              AppNavigator.push(
+                                                context,
+                                                const WalletTopupScreen(),
+                                              );
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  AppColors.secondaryColor,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 16,
+                                                vertical: 8,
+                                              ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                            ),
+                                            child: const Text(
+                                              'Topup Wallet',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 10,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          AppPreferences.logout();
-                                          AppNavigator.pushAndRemoveUntil(
-                                            context,
-                                            const StartScreen(),
-                                          );
-                                        },
-                                        child: const Text(
-                                          'Logout',
-                                          style: TextStyle(
-                                            color: AppColors.errorColor,
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.errorColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            child: const Text(
-                              'Logout',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
-                            ),
+                            ],
                           ),
-                        ),
+                          const SizedBox(height: 20),
 
-                        // Fingerprint and NFC Section
-                        const SizedBox(height: 40),
-                        const Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'Your Fingerprint or NFC Device/Card\nEnable or disable to use the fingerprint or NFC',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w500,
+                          // Profile Information List
+                          _buildProfileItem(
+                            context.read<ProfileCubit>().nameController.text,
+                            Icons.edit,
+                            onEdit: () => _showEditDialog(
+                              'Name',
+                              context.read<ProfileCubit>().nameController.text,
+                              (value) => setState(() => context
+                                  .read<ProfileCubit>()
+                                  .nameController
+                                  .text = value),
                             ),
-                            textAlign: TextAlign.center,
                           ),
-                        ),
-                        const SizedBox(height: 16),
-                        Column(
-                          children: [
-                            _buildStatusButton(
-                              'NFC Registered',
-                              _switchStates['NFC']!
-                                  ? AppColors.secondaryColor
-                                  : Colors.grey,
-                              hasNfc ?? false,
+                          _buildProfileItem(
+                            context.read<ProfileCubit>().phoneController.text,
+                            Icons.edit,
+                            onEdit: () => _showEditDialog(
+                              'Phone',
+                              context.read<ProfileCubit>().phoneController.text,
+                              (value) => setState(() => context
+                                  .read<ProfileCubit>()
+                                  .phoneController
+                                  .text = value),
                             ),
-                            const SizedBox(height: 12),
-                            _buildStatusButton(
-                              'Fingerprint Registered',
-                              _switchStates['Fingerprint']!
-                                  ? AppColors.secondaryColor
-                                  : Colors.grey,
-                              hasFingerprint ?? false,
+                          ),
+                          _buildProfileItem(
+                            context.read<ProfileCubit>().emailController.text,
+                            Icons.edit,
+                            onEdit: () => _showEditDialog(
+                              'Email',
+                              context.read<ProfileCubit>().emailController.text,
+                              (value) => setState(() => context
+                                  .read<ProfileCubit>()
+                                  .emailController
+                                  .text = value),
                             ),
-                          ],
-                        ),
-                      ],
+                          ),
+
+                          _buildProfileItem(
+                            context.read<ProfileCubit>().addressController.text,
+                            Icons.edit,
+                            onEdit: () => _showEditDialog(
+                              'Address',
+                              context
+                                  .read<ProfileCubit>()
+                                  .addressController
+                                  .text,
+                              (value) => setState(() => context
+                                  .read<ProfileCubit>()
+                                  .addressController
+                                  .text = value),
+                            ),
+                          ),
+
+                          // Update Profile Button
+                          const SizedBox(height: 20),
+
+                          // reset password button
+                          SizedBox(
+                            height: 40,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                _showResetPasswordDialog();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: const Text(
+                                'Reset Password',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 5),
+
+                          SizedBox(
+                            height: 40,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // Update the image through the cubit
+                                context
+                                    .read<ProfileCubit>()
+                                    .updateCustomerProfile(
+                                      UserModel(
+                                        name: context
+                                            .read<ProfileCubit>()
+                                            .nameController
+                                            .text,
+                                        phone: context
+                                            .read<ProfileCubit>()
+                                            .phoneController
+                                            .text,
+                                        email: context
+                                            .read<ProfileCubit>()
+                                            .emailController
+                                            .text,
+                                        address: context
+                                            .read<ProfileCubit>()
+                                            .addressController
+                                            .text,
+                                      ),
+                                      imageFile: _imageFile,
+                                    );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.cyanBlueColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: state is ProfileLoading
+                                  ? const AppLoading(
+                                      color: Colors.white,
+                                      size: 20,
+                                    )
+                                  : const Text(
+                                      'Update Profile',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 5),
+
+                          // // Request Services Button
+                          // SizedBox(
+                          //   height: 40,
+                          //   width: double.infinity,
+                          //   child: ElevatedButton(
+                          //     onPressed: () {
+                          //       AppNavigator.push(
+                          //         context,
+                          //         const SelectServicesScreen(),
+                          //       );
+                          //     },
+                          //     style: ElevatedButton.styleFrom(
+                          //       backgroundColor: AppColors.purpleColor,
+                          //       shape: RoundedRectangleBorder(
+                          //         borderRadius: BorderRadius.circular(8),
+                          //       ),
+                          //     ),
+                          //     child: const Text(
+                          //       'Request Services',
+                          //       style: TextStyle(
+                          //         color: Colors.white,
+                          //         fontSize: 12,
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
+
+                          const SizedBox(height: 5),
+                          // logout button
+                          SizedBox(
+                            height: 40,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      backgroundColor: Colors.white,
+                                      title: const Text(
+                                        'Confirm Logout',
+                                        style: TextStyle(
+                                          color: AppColors.purpleColor,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                      content: const Text(
+                                        'Are you sure you want to logout?',
+                                        style: TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: const Text(
+                                            'Cancel',
+                                            style: TextStyle(
+                                              color: AppColors.purpleColor,
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            AppPreferences.logout();
+                                            AppNavigator.pushAndRemoveUntil(
+                                              context,
+                                              const StartScreen(),
+                                            );
+                                          },
+                                          child: const Text(
+                                            'Logout',
+                                            style: TextStyle(
+                                              color: AppColors.errorColor,
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.errorColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: const Text(
+                                'Logout',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          // Fingerprint and NFC Section
+                          const SizedBox(height: 40),
+                          const Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              'Your Fingerprint or NFC Device/Card\nEnable or disable to use the fingerprint or NFC',
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Column(
+                            children: [
+                              _buildStatusButton(
+                                'NFC Registered',
+                                _switchStates['NFC']!
+                                    ? AppColors.secondaryColor
+                                    : Colors.grey,
+                                hasNfc ?? false,
+                              ),
+                              const SizedBox(height: 12),
+                              _buildStatusButton(
+                                'Fingerprint Registered',
+                                _switchStates['Fingerprint']!
+                                    ? AppColors.secondaryColor
+                                    : Colors.grey,
+                                hasFingerprint ?? false,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

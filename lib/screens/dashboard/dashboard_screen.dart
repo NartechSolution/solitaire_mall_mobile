@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solitaire/constants/constant.dart';
 import 'package:solitaire/cubit/customer_profile/profile_cubit.dart';
-import 'package:solitaire/screens/dashboard_screen/home_screen.dart';
+import 'package:solitaire/screens/customer_profile/customer_profile_screen.dart';
 import 'package:solitaire/screens/pickers/available_pickers_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -17,62 +17,62 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // List of pages/widgets to display
   final List<Widget> _pages = [
-    HomeScreen(),
+    CustomerProfileScreen(),
     AvailablePickersScreen(),
-    Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.construction,
-            size: 64,
-            color: Colors.grey,
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'Coming Soon!',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'History feature is under development',
-            style: TextStyle(
-              color: Colors.grey,
-            ),
-          ),
-        ],
-      ),
-    ),
-    Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.construction,
-            size: 64,
-            color: Colors.grey,
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'Coming Soon!',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Settings feature is under development',
-            style: TextStyle(
-              color: Colors.grey,
-            ),
-          ),
-        ],
-      ),
-    ),
+    // Center(
+    //   child: Column(
+    //     mainAxisAlignment: MainAxisAlignment.center,
+    //     children: [
+    //       const Icon(
+    //         Icons.construction,
+    //         size: 64,
+    //         color: Colors.grey,
+    //       ),
+    //       const SizedBox(height: 16),
+    //       const Text(
+    //         'Coming Soon!',
+    //         style: TextStyle(
+    //           fontSize: 24,
+    //           fontWeight: FontWeight.bold,
+    //         ),
+    //       ),
+    //       const SizedBox(height: 8),
+    //       const Text(
+    //         'History feature is under development',
+    //         style: TextStyle(
+    //           color: Colors.grey,
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // ),
+    // Center(
+    //   child: Column(
+    //     mainAxisAlignment: MainAxisAlignment.center,
+    //     children: [
+    //       const Icon(
+    //         Icons.construction,
+    //         size: 64,
+    //         color: Colors.grey,
+    //       ),
+    //       const SizedBox(height: 16),
+    //       const Text(
+    //         'Coming Soon!',
+    //         style: TextStyle(
+    //           fontSize: 24,
+    //           fontWeight: FontWeight.bold,
+    //         ),
+    //       ),
+    //       const SizedBox(height: 8),
+    //       const Text(
+    //         'Settings feature is under development',
+    //         style: TextStyle(
+    //           color: Colors.grey,
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // ),
   ];
 
   void _onItemTapped(int index) {
@@ -137,41 +137,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
+            icon: Icon(Icons.person_outline),
+            label: 'Profile',
             backgroundColor: AppColors.primaryColor,
             activeIcon: Icon(
-              Icons.home,
+              Icons.person_outline,
               size: 30,
             ),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.person_search),
             label: 'Pickers',
             backgroundColor: AppColors.primaryColor,
             activeIcon: Icon(
-              Icons.search,
+              Icons.person_search,
               size: 30,
             ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            label: 'History',
-            backgroundColor: AppColors.primaryColor,
-            activeIcon: Icon(
-              Icons.history,
-              size: 30,
-            ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-            backgroundColor: AppColors.primaryColor,
-            activeIcon: Icon(
-              Icons.settings,
-              size: 30,
-            ),
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.history),
+          //   label: 'History',
+          //   backgroundColor: AppColors.primaryColor,
+          //   activeIcon: Icon(
+          //     Icons.history,
+          //     size: 30,
+          //   ),
+          // ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.settings),
+          //   label: 'Settings',
+          //   backgroundColor: AppColors.primaryColor,
+          //   activeIcon: Icon(
+          //     Icons.settings,
+          //     size: 30,
+          //   ),
+          // ),
         ],
       ),
     );
