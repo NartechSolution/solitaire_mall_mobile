@@ -18,7 +18,7 @@ class _RequestHistoryState extends State<RequestHistory> {
   @override
   void initState() {
     super.initState();
-    _refreshTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+    _refreshTimer = Timer.periodic(const Duration(seconds: 60), (timer) {
       if (mounted) {
         context.read<PickerRequestCubit>().getRequestStatus();
       }

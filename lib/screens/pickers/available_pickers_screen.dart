@@ -35,7 +35,7 @@ class _AvailablePickersScreenState extends State<AvailablePickersScreen>
     context.read<PickerCubit>().getPickers(page, limit);
 
     // Set up auto-refresh timer
-    _refreshTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+    _refreshTimer = Timer.periodic(const Duration(seconds: 60), (timer) {
       if (mounted) {
         setState(() {
           page = 1;
