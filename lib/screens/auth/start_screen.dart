@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:solitaire/constants/constant.dart';
 import 'package:solitaire/cubit/auth/auth_cubit.dart';
 import 'package:solitaire/cubit/auth/auth_state.dart';
@@ -383,22 +383,22 @@ class _StartScreenState extends State<StartScreen> {
                                       ),
                                     ),
                               const Divider(color: AppColors.purpleColor),
-                              const Center(child: Text('or Sign up with')),
-                              const SizedBox(height: 5),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  _socialButton(FontAwesomeIcons.facebook,
-                                      AppColors.purpleColor),
-                                  _socialButton(
-                                      FontAwesomeIcons.twitter, Colors.black),
-                                  _socialButton(
-                                      FontAwesomeIcons.google, Colors.red),
-                                  _socialButton(
-                                      FontAwesomeIcons.apple, Colors.black),
-                                ],
-                              ),
+                              // const Center(child: Text('or Sign up with')),
+                              // const SizedBox(height: 5),
+                              // Row(
+                              //   mainAxisAlignment:
+                              //       MainAxisAlignment.spaceEvenly,
+                              //   children: [
+                              //     _socialButton(FontAwesomeIcons.facebook,
+                              //         AppColors.purpleColor),
+                              //     _socialButton(
+                              //         FontAwesomeIcons.twitter, Colors.black),
+                              //     _socialButton(
+                              //         FontAwesomeIcons.google, Colors.red),
+                              //     _socialButton(
+                              //         FontAwesomeIcons.apple, Colors.black),
+                              //   ],
+                              // ),
                               const SizedBox(height: 10),
                               Center(
                                 child: RichText(
@@ -492,17 +492,17 @@ class _StartScreenState extends State<StartScreen> {
     );
   }
 
-  Widget _socialButton(IconData icon, Color color) {
-    return InkWell(
-      onTap: () {},
-      child: Container(
-        padding: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: color),
-        ),
-        child: FaIcon(icon, color: color, size: 20),
-      ),
-    );
-  }
+  // Widget _socialButton(IconData icon, Color color) {
+  //   return InkWell(
+  //     onTap: () {},
+  //     child: Container(
+  //       padding: const EdgeInsets.all(5),
+  //       decoration: BoxDecoration(
+  //         shape: BoxShape.circle,
+  //         border: Border.all(color: color),
+  //       ),
+  //       child: FaIcon(icon, color: color, size: 20),
+  //     ),
+  //   );
+  // }
 }
